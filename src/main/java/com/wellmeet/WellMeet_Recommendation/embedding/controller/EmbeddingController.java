@@ -13,6 +13,6 @@ public class EmbeddingController {
     private final EmbeddingService embeddingService;
     @PostMapping("/api/embedding/generate")
     float[] getEmbedding(@RequestBody String text){
-        return this.embeddingService.createEmbedding(text);
+        return embeddingService.createEmbedding(text);
     }
 }

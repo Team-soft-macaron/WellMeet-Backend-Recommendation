@@ -13,7 +13,7 @@ public class LLMController {
     private final LLMService LLMService;
     @PostMapping("/api/llm/generate")
     public ExtractedInfoResponse getExtractedInfo(@RequestBody String query){
-        return this.LLMService.extractUserRequest(query);
+        return LLMService.extractUserRequest(query);
     }
 
 }
