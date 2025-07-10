@@ -33,6 +33,7 @@ public class CrawlingReviewService {
         float[] foodVector = extractedInfoResponse.getFood().isEmpty() ? new float[768] : embeddingService.createEmbedding(extractedInfoResponse.getFood());
         float[] companionVector = extractedInfoResponse.getCompanion().isEmpty() ? new float[768] : embeddingService.createEmbedding(extractedInfoResponse.getCompanion());
         float[] purposeVector = extractedInfoResponse.getPurpose().isEmpty() ? new float[768] : embeddingService.createEmbedding(extractedInfoResponse.getPurpose());
+
         CrawlingReview review = new CrawlingReview(
                 request.getContent(),
                 restaurant,
@@ -44,6 +45,51 @@ public class CrawlingReviewService {
         );
 
         CrawlingReview savedCrawlingReview = crawlingReviewRepository.save(review);
+
+        // 증분 평균으로 식당 벡터 업데이트
+        updateRestaurantVectorsIncremental(restaurant, vibeVector, foodVector, companionVector, purposeVector);
+
         return new CrawlingReviewResponse(savedCrawlingReview);
+    }
+
+    private void updateRestaurantVectorsIncremental(Restaurant restaurant,
+                                                    float[] newVibeVector,
+                                                    float[] newFoodVector,
+                                                    float[] newCompanionVector,
+                                                    float[] newPurposeVector) {
+        // 현재 리뷰 개수 (방금 추가한 것 포함)
+        long reviewCount = crawlingReviewRepository.countByRestaurantId(restaurant.getId());
+
+        if (reviewCount == 1) {
+            // 첫 번째 리뷰인 경우
+            restaurant.updateVectors(newVibeVector, newFoodVector, newCompanionVector, newPurposeVector);
+        } else {
+            // 증분 평균 계산: newAvg = (oldAvg * (n-1) + newValue) / n
+            float[] updatedVibeVector = calculateIncrementalAverage(
+                    restaurant.getVibeVector(), newVibeVector, reviewCount);
+            float[] updatedFoodVector = calculateIncrementalAverage(
+                    restaurant.getFoodVector(), newFoodVector, reviewCount);
+            float[] updatedCompanionVector = calculateIncrementalAverage(
+                    restaurant.getCompanionVector(), newCompanionVector, reviewCount);
+            float[] updatedPurposeVector = calculateIncrementalAverage(
+                    restaurant.getPurposeVector(), newPurposeVector, reviewCount);
+
+            restaurant.updateVectors(updatedVibeVector, updatedFoodVector,
+                    updatedCompanionVector, updatedPurposeVector);
+        }
+
+        restaurantRepository.save(restaurant);
+    }
+
+    private float[] calculateIncrementalAverage(float[] oldAverage, float[] newVector, long totalCount) {
+        float[] result = new float[768];
+        float weight = (totalCount - 1) / (float) totalCount;
+        float newWeight = 1.0f / totalCount;
+
+        for (int i = 0; i < 768; i++) {
+            result[i] = oldAverage[i] * weight + newVector[i] * newWeight;
+        }
+
+        return result;
     }
 }

@@ -70,4 +70,12 @@ public class Restaurant extends BaseEntity {
         this.companionVector = companionVector;
         this.purposeVector = purposeVector;
     }
+    public void updateVectors(float[] vibeVector, float[] foodVector,
+                              float[] companionVector, float[] purposeVector) {
+        this.vibeVector = vibeVector;
+        this.foodVector = foodVector;
+        this.companionVector = companionVector;
+        this.purposeVector = purposeVector;
+    }
+
 }
