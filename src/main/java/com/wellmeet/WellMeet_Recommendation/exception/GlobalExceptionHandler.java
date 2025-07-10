@@ -1,12 +1,17 @@
 package com.wellmeet.WellMeet_Recommendation.exception;
 
+import jakarta.servlet.http.HttpServletRequest;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.slf4j.Logger;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(WellMeetException.class)
     public ResponseEntity<ErrorResponse> handleOAuthClientException(WellMeetException exception) {
@@ -14,7 +19,12 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleException(Exception exception) {
+    public ResponseEntity<ErrorResponse> handleException(Exception exception, HttpServletRequest request) {
+        log.error("Unexpected error occurred - Path: {}, Method: {}, Message: {}",
+                request.getRequestURI(),
+                request.getMethod(),
+                exception.getMessage(),
+                exception);
         return toResponse(ErrorCode.INTERNAL_SERVER_ERROR);
     }
 
