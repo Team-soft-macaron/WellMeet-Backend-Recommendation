@@ -20,19 +20,19 @@ public class CrawlingReview {
     private String content;
     private String hash;
     @JdbcTypeCode(SqlTypes.VECTOR)
-    @Column(name = "vibe_vector", columnDefinition = "vector(384)")
+    @Column(name = "vibe_vector", columnDefinition = "vector(768)")
     private float[] vibeVector;
 
     @JdbcTypeCode(SqlTypes.VECTOR)
-    @Column(name = "food_vector", columnDefinition = "vector(384)")
+    @Column(name = "food_vector", columnDefinition = "vector(768)")
     private float[] foodVector;
 
     @JdbcTypeCode(SqlTypes.VECTOR)
-    @Column(name = "companion_vector", columnDefinition = "vector(384)")
+    @Column(name = "companion_vector", columnDefinition = "vector(768)")
     private float[] companionVector;
 
     @JdbcTypeCode(SqlTypes.VECTOR)
-    @Column(name = "purpose_vector", columnDefinition = "vector(384)")
+    @Column(name = "purpose_vector", columnDefinition = "vector(768)")
     private float[] purposeVector;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id")

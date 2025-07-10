@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.annotations.Type;
 import org.hibernate.type.SqlTypes;
 
 @Getter
@@ -36,20 +37,21 @@ public class Restaurant extends BaseEntity {
 
     private String thumbnail;
 
-    @JdbcTypeCode(SqlTypes.VECTOR)
-    @Column(name = "vibe_vector", columnDefinition = "vector(384)")
+//    @JdbcTypeCode(SqlTypes.VECTOR)
+    @Type(VectorType.class)
+    @Column(name = "vibe_vector", columnDefinition = "vector(768)")
     private float[] vibeVector;
 
-    @JdbcTypeCode(SqlTypes.VECTOR)
-    @Column(name = "food_vector", columnDefinition = "vector(384)")
+    @Type(VectorType.class)
+    @Column(name = "food_vector", columnDefinition = "vector(768)")
     private float[] foodVector;
 
-    @JdbcTypeCode(SqlTypes.VECTOR)
-    @Column(name = "companion_vector", columnDefinition = "vector(384)")
+    @Type(VectorType.class)
+    @Column(name = "companion_vector", columnDefinition = "vector(768)")
     private float[] companionVector;
 
-    @JdbcTypeCode(SqlTypes.VECTOR)
-    @Column(name = "purpose_vector", columnDefinition = "vector(384)")
+    @Type(VectorType.class)
+    @Column(name = "purpose_vector", columnDefinition = "vector(768)")
     private float[] purposeVector;
 
     @Builder
