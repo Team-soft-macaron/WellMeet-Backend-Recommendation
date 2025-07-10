@@ -1,6 +1,5 @@
 package com.wellmeet.WellMeet_Recommendation.llm.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,11 +9,11 @@ public class ExtractedInfoResponse {
     private String purpose;      // 모임 목적
     private String vibe;         // 분위기
     private String companion;    // 동행자 정보
-    private String cuisine;      // 음식
-    public ExtractedInfoResponse(String purpose, String vibe, String companion, String cuisine){
+    private String food;      // 음식
+    public ExtractedInfoResponse(String purpose, String vibe, String companion, String food){
         this.purpose = purpose;
         this.vibe = vibe;
         this.companion = companion;
-        this.cuisine = cuisine;
+        this.food = food;
     }
 }

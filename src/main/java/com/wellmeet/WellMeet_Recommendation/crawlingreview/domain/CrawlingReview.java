@@ -1,12 +1,12 @@
 package com.wellmeet.WellMeet_Recommendation.crawlingreview.domain;
 
 import com.wellmeet.WellMeet_Recommendation.restaurant.domain.Restaurant;
+import com.wellmeet.WellMeet_Recommendation.restaurant.domain.VectorType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
+import org.hibernate.annotations.Type;
 
 @Getter
 @Entity
@@ -19,28 +19,38 @@ public class CrawlingReview {
     @Column(columnDefinition = "TEXT")
     private String content;
     private String hash;
-    @JdbcTypeCode(SqlTypes.VECTOR)
+    @Type(VectorType.class)
     @Column(name = "vibe_vector", columnDefinition = "vector(768)")
     private float[] vibeVector;
 
-    @JdbcTypeCode(SqlTypes.VECTOR)
+    @Type(VectorType.class)
     @Column(name = "food_vector", columnDefinition = "vector(768)")
     private float[] foodVector;
 
-    @JdbcTypeCode(SqlTypes.VECTOR)
+    @Type(VectorType.class)
     @Column(name = "companion_vector", columnDefinition = "vector(768)")
     private float[] companionVector;
 
-    @JdbcTypeCode(SqlTypes.VECTOR)
+    @Type(VectorType.class)
     @Column(name = "purpose_vector", columnDefinition = "vector(768)")
     private float[] purposeVector;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
 
-    public CrawlingReview(String content, Restaurant restaurant, String hash) {
+    public CrawlingReview(String content,
+                          Restaurant restaurant,
+                          String hash,
+                          float[] vibeVector,
+                          float[] foodVector,
+                          float[] companionVector,
+                          float[] purposeVector) {
         this.content = content;
         this.restaurant = restaurant;
         this.hash = hash;
+        this.vibeVector = vibeVector;
+        this.foodVector = foodVector;
+        this.companionVector = companionVector;
+        this.purposeVector = purposeVector;
     }
 }

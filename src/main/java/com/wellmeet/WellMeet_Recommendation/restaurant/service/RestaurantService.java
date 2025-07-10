@@ -41,7 +41,7 @@ public class RestaurantService {
                 new float[768]
         );
 
-        Restaurant createdRestaurant = restaurantRepository.save(restaurant);
-        return new RestaurantResponse(createdRestaurant);
+        Restaurant savedRestaurant = restaurantRepository.save(restaurant);
+        return new RestaurantResponse(savedRestaurant);
     }
 }
