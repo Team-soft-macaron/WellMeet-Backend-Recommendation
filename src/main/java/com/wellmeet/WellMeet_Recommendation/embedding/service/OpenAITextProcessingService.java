@@ -2,22 +2,21 @@ package com.wellmeet.WellMeet_Recommendation.embedding.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.ai.embedding.EmbeddingModel;
 import org.springframework.ai.embedding.EmbeddingResponse;
-import org.springframework.ai.vertexai.embedding.text.VertexAiTextEmbeddingModel;
+import org.springframework.ai.openai.OpenAiEmbeddingModel;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
-// @Service
+@Service
 @RequiredArgsConstructor
 @Slf4j
-public class GeminiTextProcessingService implements EmbeddingService {
+public class OpenAITextProcessingService implements EmbeddingService {
 
-    private final VertexAiTextEmbeddingModel geminiEmbeddingModel;
+    private final OpenAiEmbeddingModel openAiEmbeddingModel;
 
     @Override
     public float[] createEmbedding(String text) {
-        EmbeddingResponse response = geminiEmbeddingModel.embedForResponse(List.of(text));
+        EmbeddingResponse response = openAiEmbeddingModel.embedForResponse(List.of(text));
         return response.getResult().getOutput();
 
     }

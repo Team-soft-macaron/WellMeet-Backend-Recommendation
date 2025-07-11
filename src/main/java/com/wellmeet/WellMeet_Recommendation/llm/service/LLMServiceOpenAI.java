@@ -8,16 +8,18 @@ import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.converter.BeanOutputConverter;
-import org.springframework.ai.vertexai.gemini.VertexAiGeminiChatModel;
+import org.springframework.ai.openai.OpenAiChatModel;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-// @Service
+@Service
 @RequiredArgsConstructor
 @Slf4j
-public class LLMServiceGemini implements LLMService {
+// @Qualifier("gemini")
+public class LLMServiceOpenAI implements LLMService {
 
-    private final VertexAiGeminiChatModel geminiChatModel;
+    private final OpenAiChatModel openAiChatModel;
 
     public ExtractedInfoResponse extractUserRequest(String userRequest) {
         var outputConverter = new BeanOutputConverter<>(ExtractedInfoResponse.class);
@@ -45,7 +47,7 @@ public class LLMServiceGemini implements LLMService {
                 new SystemMessage(systemPrompt),
                 new UserMessage("다음 요청을 분석해주세요: " + userRequest)));
 
-        ChatResponse response = geminiChatModel.call(prompt);
+        ChatResponse response = openAiChatModel.call(prompt);
         String content = response.getResult().getOutput().getText();
         return outputConverter.convert(content);
     }
