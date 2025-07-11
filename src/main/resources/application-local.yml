@@ -30,15 +30,14 @@ spring:
           credentials-uri: classpath:vertex_ai_key.json
           project-id: ace-metric-465309-n8
           location: us-central1
-          enabled: true
-          options:
-            model: gemini-2.0-flash
+          chat:
+            options:
+              model: gemini-2.0-flash
         embedding:
           credentials-uri: classpath:vertex_ai_key.json
           project-id: ace-metric-465309-n8
           location: us-central1
           text:
-            enabled: true
             options:
               model: text-embedding-004
               task-type: RETRIEVAL_DOCUMENT
