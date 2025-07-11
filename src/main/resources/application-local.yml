@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/restaurant_db
+    url: jdbc:postgresql://localhost:5432/restaurant
     username: postgres
     password: "0000"
     driver-class-name: org.postgresql.Driver
@@ -10,17 +10,31 @@ spring:
       ddl-auto: update
     show-sql: true
   ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      # Chat 모델 설정
+      chat:
+        options:
+          model: gpt-4o-mini
+          temperature: 0.3
+      
+      # Embedding 모델 설정
+      embedding:
+        options:
+          model: text-embedding-3-small
+          dimensions: 786
+
     vertex:
       ai:
-        credentials-uri: classpath:vertex_ai_key.json
         gemini:
+          credentials-uri: classpath:vertex_ai_key.json
           project-id: ace-metric-465309-n8
           location: us-central1
-          chat:
-            enabled: true
-            options:
-              model: gemini-2.0-flash
+          enabled: true
+          options:
+            model: gemini-2.0-flash
         embedding:
+          credentials-uri: classpath:vertex_ai_key.json
           project-id: ace-metric-465309-n8
           location: us-central1
           text:
