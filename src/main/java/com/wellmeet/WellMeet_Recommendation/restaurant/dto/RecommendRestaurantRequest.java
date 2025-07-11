@@ -7,7 +7,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RecommendRestaurantRequest {
     private String query;
-    public RecommendRestaurantRequest(String query){
+
+    public RecommendRestaurantRequest(String query) {
         this.query = query;
     }
 }

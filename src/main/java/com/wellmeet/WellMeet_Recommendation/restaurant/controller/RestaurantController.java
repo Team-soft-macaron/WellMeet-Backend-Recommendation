@@ -27,7 +27,7 @@ public class RestaurantController {
 
     @PostMapping("/api/restaurants/recommend")
     @ResponseStatus(HttpStatus.OK)
-    public List<RestaurantResponse> recommendRestaurants(@RequestBody RecommendRestaurantRequest request){
+    public List<RestaurantResponse> recommendRestaurants(@RequestBody RecommendRestaurantRequest request) {
         return restaurantService.recommendRestaurant(request.getQuery());
     }
 }

@@ -44,19 +44,22 @@ public class RestaurantService {
                 new float[768],
                 new float[768],
                 new float[768],
-                new float[768]
-        );
+                new float[768]);
 
         Restaurant savedRestaurant = restaurantRepository.save(restaurant);
         return new RestaurantResponse(savedRestaurant);
     }
 
-    public List<RestaurantResponse> recommendRestaurant(String query){
+    public List<RestaurantResponse> recommendRestaurant(String query) {
         ExtractedInfoResponse extractedInfoResponse = llmService.extractUserRequest(query);
-        float[] vibeVector = extractedInfoResponse.getVibe().isEmpty() ? new float[768] : embeddingService.createEmbedding(extractedInfoResponse.getVibe());
-        float[] foodVector = extractedInfoResponse.getFood().isEmpty() ? new float[768] : embeddingService.createEmbedding(extractedInfoResponse.getFood());
-        float[] companionVector = extractedInfoResponse.getCompanion().isEmpty() ? new float[768] : embeddingService.createEmbedding(extractedInfoResponse.getCompanion());
-        float[] purposeVector = extractedInfoResponse.getPurpose().isEmpty() ? new float[768] : embeddingService.createEmbedding(extractedInfoResponse.getPurpose());
+        float[] vibeVector = extractedInfoResponse.getVibe().isEmpty() ? new float[768]
+                : embeddingService.createEmbedding(extractedInfoResponse.getVibe());
+        float[] foodVector = extractedInfoResponse.getFood().isEmpty() ? new float[768]
+                : embeddingService.createEmbedding(extractedInfoResponse.getFood());
+        float[] companionVector = extractedInfoResponse.getCompanion().isEmpty() ? new float[768]
+                : embeddingService.createEmbedding(extractedInfoResponse.getCompanion());
+        float[] purposeVector = extractedInfoResponse.getPurpose().isEmpty() ? new float[768]
+                : embeddingService.createEmbedding(extractedInfoResponse.getPurpose());
 
         // 데이터베이스에서 직접 합산된 유사도로 정렬
         List<Restaurant> topRestaurants = restaurantRepository.findTopByCombinedSimilarity(
@@ -64,8 +67,7 @@ public class RestaurantService {
                 foodVector,
                 companionVector,
                 purposeVector,
-                5
-        );
+                5);
 
         return topRestaurants.stream()
                 .map(RestaurantResponse::new)

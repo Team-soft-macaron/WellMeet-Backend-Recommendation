@@ -21,8 +21,10 @@ public class VectorType implements UserType<float[]> {
 
     @Override
     public boolean equals(float[] x, float[] y) {
-        if (x == y) return true;
-        if (x == null || y == null) return false;
+        if (x == y)
+            return true;
+        if (x == null || y == null)
+            return false;
         return Arrays.equals(x, y);
     }
 
@@ -33,8 +35,8 @@ public class VectorType implements UserType<float[]> {
 
     @Override
     public float[] nullSafeGet(ResultSet rs, int position,
-                               SharedSessionContractImplementor session,
-                               Object owner) throws SQLException {
+            SharedSessionContractImplementor session,
+            Object owner) throws SQLException {
         String value = rs.getString(position);
         if (rs.wasNull() || value == null) {
             return null;
@@ -52,7 +54,7 @@ public class VectorType implements UserType<float[]> {
 
     @Override
     public void nullSafeSet(PreparedStatement st, float[] value,
-                            int index, SharedSessionContractImplementor session)
+            int index, SharedSessionContractImplementor session)
             throws SQLException {
         if (value == null) {
             st.setNull(index, Types.OTHER);
@@ -60,7 +62,8 @@ public class VectorType implements UserType<float[]> {
             // float[]를 PostgreSQL vector 형식 문자열로 변환
             StringBuilder sb = new StringBuilder("[");
             for (int i = 0; i < value.length; i++) {
-                if (i > 0) sb.append(",");
+                if (i > 0)
+                    sb.append(",");
                 sb.append(value[i]);
             }
             sb.append("]");

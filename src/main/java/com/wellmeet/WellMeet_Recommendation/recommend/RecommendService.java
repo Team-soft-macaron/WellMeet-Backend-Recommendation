@@ -1,6 +1,5 @@
 package com.wellmeet.WellMeet_Recommendation.recommend;
 
-
 import com.wellmeet.WellMeet_Recommendation.restaurant.domain.BoundingBox;
 import com.wellmeet.WellMeet_Recommendation.restaurant.domain.Restaurant;
 import com.wellmeet.WellMeet_Recommendation.restaurant.dto.RecommendRestaurantResponse;

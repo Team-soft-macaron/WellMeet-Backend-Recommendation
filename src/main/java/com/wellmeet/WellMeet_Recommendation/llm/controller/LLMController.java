@@ -11,8 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class LLMController {
     private final LLMService LLMService;
+
     @PostMapping("/api/llm/generate")
-    public ExtractedInfoResponse getExtractedInfo(@RequestBody String query){
+    public ExtractedInfoResponse getExtractedInfo(@RequestBody String query) {
         return LLMService.extractUserRequest(query);
     }
 

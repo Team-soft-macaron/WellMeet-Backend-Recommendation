@@ -15,7 +15,7 @@ public class RestaurantCreateRequest {
     private String thumbnail;
 
     public RestaurantCreateRequest(String placeId, String name, String address,
-                                   Double latitude, Double longitude, String thumbnail) {
+            Double latitude, Double longitude, String thumbnail) {
         this.placeId = placeId;
         this.name = name;
         this.address = address;

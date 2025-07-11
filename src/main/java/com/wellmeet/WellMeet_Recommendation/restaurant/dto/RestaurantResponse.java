@@ -4,8 +4,6 @@ import com.wellmeet.WellMeet_Recommendation.restaurant.domain.Restaurant;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Getter
 @NoArgsConstructor
 public class RestaurantResponse {

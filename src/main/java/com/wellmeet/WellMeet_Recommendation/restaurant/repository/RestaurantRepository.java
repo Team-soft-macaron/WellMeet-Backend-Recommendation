@@ -21,20 +21,19 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
     List<Restaurant> findWithBoundBox(@Param("boundingBox") BoundingBox boundingBox);
 
     @Query(value = """
-    SELECT * FROM restaurant r
-    ORDER BY (
-        (1 - (r.vibe_vector <=> CAST(:vibeVector AS vector))) +
-        (1 - (r.food_vector <=> CAST(:foodVector AS vector))) +
-        (1 - (r.companion_vector <=> CAST(:companionVector AS vector))) +
-        (1 - (r.purpose_vector <=> CAST(:purposeVector AS vector)))
-    ) DESC
-    LIMIT :limit
-    """, nativeQuery = true)
+            SELECT * FROM restaurant r
+            ORDER BY (
+                (1 - (r.vibe_vector <=> CAST(:vibeVector AS vector))) +
+                (1 - (r.food_vector <=> CAST(:foodVector AS vector))) +
+                (1 - (r.companion_vector <=> CAST(:companionVector AS vector))) +
+                (1 - (r.purpose_vector <=> CAST(:purposeVector AS vector)))
+            ) DESC
+            LIMIT :limit
+            """, nativeQuery = true)
     List<Restaurant> findTopByCombinedSimilarity(
             @Param("vibeVector") float[] vibeVector,
             @Param("foodVector") float[] foodVector,
             @Param("companionVector") float[] companionVector,
             @Param("purposeVector") float[] purposeVector,
-            @Param("limit") int limit
-    );
+            @Param("limit") int limit);
 }

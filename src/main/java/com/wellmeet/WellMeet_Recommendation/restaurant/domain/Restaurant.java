@@ -6,9 +6,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.Type;
-import org.hibernate.type.SqlTypes;
 
 @Getter
 @Entity
@@ -37,7 +35,7 @@ public class Restaurant extends BaseEntity {
 
     private String thumbnail;
 
-//    @JdbcTypeCode(SqlTypes.VECTOR)
+    // @JdbcTypeCode(SqlTypes.VECTOR)
     @Type(VectorType.class)
     @Column(name = "vibe_vector", columnDefinition = "vector(768)")
     private float[] vibeVector;
@@ -56,9 +54,9 @@ public class Restaurant extends BaseEntity {
 
     @Builder
     public Restaurant(String placeId, String name, String address,
-                      double latitude, double longitude, String thumbnail,
-                      float[] vibeVector, float[] foodVector,
-                      float[] companionVector, float[] purposeVector) {
+            double latitude, double longitude, String thumbnail,
+            float[] vibeVector, float[] foodVector,
+            float[] companionVector, float[] purposeVector) {
         this.placeId = placeId;
         this.name = name;
         this.address = address;
@@ -70,8 +68,9 @@ public class Restaurant extends BaseEntity {
         this.companionVector = companionVector;
         this.purposeVector = purposeVector;
     }
+
     public void updateVectors(float[] vibeVector, float[] foodVector,
-                              float[] companionVector, float[] purposeVector) {
+            float[] companionVector, float[] purposeVector) {
         this.vibeVector = vibeVector;
         this.foodVector = foodVector;
         this.companionVector = companionVector;
