@@ -46,6 +46,7 @@ public class LLMService {
 
         ChatResponse response = chatModel.call(prompt);
         String content = response.getResult().getOutput().getText();
+        log.info("ChatResponse: {}", content);
         return outputConverter.convert(content);
     }
 

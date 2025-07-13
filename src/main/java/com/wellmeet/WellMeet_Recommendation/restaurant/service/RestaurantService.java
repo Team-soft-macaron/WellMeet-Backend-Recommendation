@@ -1,6 +1,7 @@
 package com.wellmeet.WellMeet_Recommendation.restaurant.service;
 
-import com.wellmeet.WellMeet_Recommendation.embedding.service.EmbeddingService;
+import com.wellmeet.WellMeet_Recommendation.common.dto.ReviewVector;
+import com.wellmeet.WellMeet_Recommendation.common.util.ReviewVectorUtil;
 import com.wellmeet.WellMeet_Recommendation.exception.ErrorCode;
 import com.wellmeet.WellMeet_Recommendation.exception.WellMeetException;
 import com.wellmeet.WellMeet_Recommendation.llm.dto.ExtractedInfoResponse;
@@ -20,57 +21,51 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class RestaurantService {
 
-    private final RestaurantRepository restaurantRepository;
-    private final EmbeddingService embeddingService;
-    private final LLMService llmService;
+        private final RestaurantRepository restaurantRepository;
+        private final LLMService llmService;
+        private final ReviewVectorUtil reviewVectorUtil;
 
-    public List<Restaurant> findWithBoundBox(BoundingBox boundingBox) {
-        return restaurantRepository.findWithBoundBox(boundingBox);
-    }
+        public List<Restaurant> findWithBoundBox(BoundingBox boundingBox) {
+                return restaurantRepository.findWithBoundBox(boundingBox);
+        }
 
-    public Restaurant getById(Long id) {
-        return restaurantRepository.findById(id)
-                .orElseThrow(() -> new WellMeetException(ErrorCode.RESTAURANT_NOT_FOUND));
-    }
+        public Restaurant getById(Long id) {
+                return restaurantRepository.findById(id)
+                                .orElseThrow(() -> new WellMeetException(ErrorCode.RESTAURANT_NOT_FOUND));
+        }
 
-    public RestaurantResponse saveRestaurant(RestaurantCreateRequest request) {
-        Restaurant restaurant = new Restaurant(
-                request.getPlaceId(),
-                request.getName(),
-                request.getAddress(),
-                request.getLatitude(),
-                request.getLongitude(),
-                request.getThumbnail(),
-                new float[768],
-                new float[768],
-                new float[768],
-                new float[768]);
+        public RestaurantResponse saveRestaurant(RestaurantCreateRequest request) {
+                Restaurant restaurant = new Restaurant(
+                                request.getPlaceId(),
+                                request.getName(),
+                                request.getAddress(),
+                                request.getLatitude(),
+                                request.getLongitude(),
+                                request.getThumbnail(),
+                                new ReviewVector(new float[768], new float[768], new float[768], new float[768]));
 
-        Restaurant savedRestaurant = restaurantRepository.save(restaurant);
-        return new RestaurantResponse(savedRestaurant);
-    }
+                Restaurant savedRestaurant = restaurantRepository.save(restaurant);
+                return new RestaurantResponse(savedRestaurant);
+        }
 
-    public List<RestaurantResponse> recommendRestaurant(String query) {
-        ExtractedInfoResponse extractedInfoResponse = llmService.extractUserRequest(query);
-        float[] vibeVector = extractedInfoResponse.getVibe().isEmpty() ? new float[768]
-                : embeddingService.createEmbedding(extractedInfoResponse.getVibe());
-        float[] foodVector = extractedInfoResponse.getFood().isEmpty() ? new float[768]
-                : embeddingService.createEmbedding(extractedInfoResponse.getFood());
-        float[] companionVector = extractedInfoResponse.getCompanion().isEmpty() ? new float[768]
-                : embeddingService.createEmbedding(extractedInfoResponse.getCompanion());
-        float[] purposeVector = extractedInfoResponse.getPurpose().isEmpty() ? new float[768]
-                : embeddingService.createEmbedding(extractedInfoResponse.getPurpose());
+        public List<RestaurantResponse> recommendRestaurant(String query) {
+                ExtractedInfoResponse extractedInfoResponse = llmService.extractUserRequest(query);
+                ReviewVector reviewVector = reviewVectorUtil.createReviewVector(
+                                extractedInfoResponse.getVibe(),
+                                extractedInfoResponse.getFood(),
+                                extractedInfoResponse.getCompanion(),
+                                extractedInfoResponse.getPurpose());
 
-        // 데이터베이스에서 직접 합산된 유사도로 정렬
-        List<Restaurant> topRestaurants = restaurantRepository.findTopByCombinedSimilarity(
-                vibeVector,
-                foodVector,
-                companionVector,
-                purposeVector,
-                5);
+                // 데이터베이스에서 직접 합산된 유사도로 정렬
+                List<Restaurant> topRestaurants = restaurantRepository.findTopByCombinedSimilarity(
+                                reviewVector.getVibeVector(),
+                                reviewVector.getFoodVector(),
+                                reviewVector.getCompanionVector(),
+                                reviewVector.getPurposeVector(),
+                                5);
 
-        return topRestaurants.stream()
-                .map(RestaurantResponse::new)
-                .collect(Collectors.toList());
-    }
+                return topRestaurants.stream()
+                                .map(RestaurantResponse::new)
+                                .collect(Collectors.toList());
+        }
 }

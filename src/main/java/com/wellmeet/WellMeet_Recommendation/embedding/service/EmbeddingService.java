@@ -15,6 +15,10 @@ public class EmbeddingService {
     private final OpenAiEmbeddingModel embeddingModel;
 
     public float[] createEmbedding(String text) {
+        if (text.isEmpty()) {
+            return new float[768];
+        }
+        log.info("text: {}", text);
         EmbeddingResponse response = embeddingModel.embedForResponse(List.of(text));
         return response.getResult().getOutput();
 

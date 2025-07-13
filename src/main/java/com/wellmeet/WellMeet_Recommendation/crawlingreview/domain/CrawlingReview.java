@@ -1,5 +1,6 @@
 package com.wellmeet.WellMeet_Recommendation.crawlingreview.domain;
 
+import com.wellmeet.WellMeet_Recommendation.common.dto.ReviewVector;
 import com.wellmeet.WellMeet_Recommendation.restaurant.domain.Restaurant;
 import com.wellmeet.WellMeet_Recommendation.restaurant.domain.VectorType;
 import jakarta.persistence.*;
@@ -39,18 +40,15 @@ public class CrawlingReview {
     private Restaurant restaurant;
 
     public CrawlingReview(String content,
-                          Restaurant restaurant,
-                          String hash,
-                          float[] vibeVector,
-                          float[] foodVector,
-                          float[] companionVector,
-                          float[] purposeVector) {
+            Restaurant restaurant,
+            String hash,
+            ReviewVector reviewVector) {
         this.content = content;
         this.restaurant = restaurant;
         this.hash = hash;
-        this.vibeVector = vibeVector;
-        this.foodVector = foodVector;
-        this.companionVector = companionVector;
-        this.purposeVector = purposeVector;
+        this.vibeVector = reviewVector.getVibeVector();
+        this.foodVector = reviewVector.getFoodVector();
+        this.companionVector = reviewVector.getCompanionVector();
+        this.purposeVector = reviewVector.getPurposeVector();
     }
 }

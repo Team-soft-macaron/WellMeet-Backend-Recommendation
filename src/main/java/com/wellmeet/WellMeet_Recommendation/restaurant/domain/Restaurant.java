@@ -1,9 +1,10 @@
 package com.wellmeet.WellMeet_Recommendation.restaurant.domain;
 
 import com.wellmeet.WellMeet_Recommendation.common.domain.BaseEntity;
+import com.wellmeet.WellMeet_Recommendation.common.dto.ReviewVector;
+
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
@@ -52,29 +53,26 @@ public class Restaurant extends BaseEntity {
     @Column(name = "purpose_vector", columnDefinition = "vector(768)")
     private float[] purposeVector;
 
-    @Builder
     public Restaurant(String placeId, String name, String address,
             double latitude, double longitude, String thumbnail,
-            float[] vibeVector, float[] foodVector,
-            float[] companionVector, float[] purposeVector) {
+            ReviewVector reviewVector) {
         this.placeId = placeId;
         this.name = name;
         this.address = address;
         this.latitude = latitude;
         this.longitude = longitude;
         this.thumbnail = thumbnail;
-        this.vibeVector = vibeVector;
-        this.foodVector = foodVector;
-        this.companionVector = companionVector;
-        this.purposeVector = purposeVector;
+        this.vibeVector = reviewVector.getVibeVector();
+        this.foodVector = reviewVector.getFoodVector();
+        this.companionVector = reviewVector.getCompanionVector();
+        this.purposeVector = reviewVector.getPurposeVector();
     }
 
-    public void updateVectors(float[] vibeVector, float[] foodVector,
-            float[] companionVector, float[] purposeVector) {
-        this.vibeVector = vibeVector;
-        this.foodVector = foodVector;
-        this.companionVector = companionVector;
-        this.purposeVector = purposeVector;
+    public void updateVectors(ReviewVector reviewVector) {
+        this.vibeVector = reviewVector.getVibeVector();
+        this.foodVector = reviewVector.getFoodVector();
+        this.companionVector = reviewVector.getCompanionVector();
+        this.purposeVector = reviewVector.getPurposeVector();
     }
 
 }

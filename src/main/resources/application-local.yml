@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/restaurant
+    url: jdbc:postgresql://localhost:5432/restaurant_db
     username: postgres
     password: "0000"
     driver-class-name: org.postgresql.Driver
@@ -22,7 +22,7 @@ spring:
       embedding:
         options:
           model: text-embedding-3-small
-          dimensions: 786
+          dimensions: 768
 
     vertex:
       ai:
