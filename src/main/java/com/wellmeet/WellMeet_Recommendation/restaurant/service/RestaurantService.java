@@ -35,6 +35,7 @@ public class RestaurantService {
         }
 
         public RestaurantResponse saveRestaurant(RestaurantCreateRequest request) {
+                float[] zeroVector = new float[768];
                 Restaurant restaurant = new Restaurant(
                                 request.getPlaceId(),
                                 request.getName(),
@@ -42,7 +43,7 @@ public class RestaurantService {
                                 request.getLatitude(),
                                 request.getLongitude(),
                                 request.getThumbnail(),
-                                new ReviewVector(new float[768], new float[768], new float[768], new float[768]));
+                                new ReviewVector(zeroVector, zeroVector, zeroVector, zeroVector));
 
                 Restaurant savedRestaurant = restaurantRepository.save(restaurant);
                 return new RestaurantResponse(savedRestaurant);

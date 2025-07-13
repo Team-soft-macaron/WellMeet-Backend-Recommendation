@@ -8,9 +8,11 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
+        Optional<Restaurant> findByPlaceId(String restaurantId);
 
         @Query(value = """
                         SELECT r
@@ -21,14 +23,22 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
         List<Restaurant> findWithBoundBox(@Param("boundingBox") BoundingBox boundingBox);
 
         @Query(value = """
-                        SELECT r.*,
+                        WITH similarity_calc AS (
+                            SELECT r.*,
+                                   r.vibe_vector <=> CAST(:vibeVector AS vector) AS vibe_sim,
+                                   r.food_vector <=> CAST(:foodVector AS vector) AS food_sim,
+                                   r.companion_vector <=> CAST(:companionVector AS vector) AS companion_sim,
+                                   r.purpose_vector <=> CAST(:purposeVector AS vector) AS purpose_sim
+                            FROM restaurant r
+                        )
+                        SELECT *,
                                (
-                                   1 - (r.vibe_vector <=> CAST(:vibeVector AS vector)) +
-                                   1 - (r.food_vector <=> CAST(:foodVector AS vector)) +
-                                   1 - (r.companion_vector <=> CAST(:companionVector AS vector)) +
-                                   1 - (r.purpose_vector <=> CAST(:purposeVector AS vector))
+                                   CASE WHEN vibe_sim = 'NAN' THEN 1 ELSE vibe_sim END +
+                                   CASE WHEN food_sim = 'NAN' THEN 1 ELSE food_sim END +
+                                   CASE WHEN companion_sim = 'NAN' THEN 1 ELSE companion_sim END +
+                                   CASE WHEN purpose_sim = 'NAN' THEN 1 ELSE purpose_sim END
                                ) AS combined_similarity
-                        FROM restaurant r
+                        FROM similarity_calc
                         ORDER BY combined_similarity
                         LIMIT :limit
                         """, nativeQuery = true)

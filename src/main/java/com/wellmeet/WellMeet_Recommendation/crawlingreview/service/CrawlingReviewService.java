@@ -26,7 +26,7 @@ public class CrawlingReviewService {
 
         public CrawlingReviewResponse saveReview(CrawlingReviewSaveRequest request) {
                 // 식당 조회
-                Restaurant restaurant = restaurantRepository.findById(request.getRestaurantId())
+                Restaurant restaurant = restaurantRepository.findByPlaceId(request.getRestaurantId().toString())
                                 .orElseThrow(() -> new WellMeetException(ErrorCode.RESTAURANT_NOT_FOUND));
 
                 // 리뷰 추출

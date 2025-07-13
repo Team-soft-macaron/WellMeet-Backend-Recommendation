@@ -14,6 +14,7 @@ public class RestaurantResponse {
     private double latitude;
     private double longitude;
     private String thumbnail;
+    private String placeId;
 
     public RestaurantResponse(Restaurant restaurant) {
         this.id = restaurant.getId();
@@ -22,5 +23,6 @@ public class RestaurantResponse {
         this.latitude = restaurant.getLatitude();
         this.longitude = restaurant.getLongitude();
         this.thumbnail = restaurant.getThumbnail();
+        this.placeId = restaurant.getPlaceId();
     }
 }
