@@ -5,6 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.embedding.EmbeddingResponse;
 import org.springframework.ai.openai.OpenAiEmbeddingModel;
 import org.springframework.stereotype.Service;
+
+import com.wellmeet.WellMeet_Recommendation.common.dto.ReviewVector;
+
 import java.util.List;
 
 @Service
@@ -14,7 +17,7 @@ public class EmbeddingService {
 
     private final OpenAiEmbeddingModel embeddingModel;
 
-    public float[] createEmbedding(String text) {
+    private float[] createEmbedding(String text) {
         if (text.isEmpty()) {
             float[] result = new float[768];
             return result;
@@ -23,5 +26,13 @@ public class EmbeddingService {
         EmbeddingResponse response = embeddingModel.embedForResponse(List.of(text));
         return response.getResult().getOutput();
 
+    }
+
+    public ReviewVector createReviewVector(String vibe, String food, String companion, String purpose) {
+        return new ReviewVector(
+                createEmbedding(vibe),
+                createEmbedding(food),
+                createEmbedding(companion),
+                createEmbedding(purpose));
     }
 }

@@ -3,7 +3,7 @@ name: Deploy JAR
 
 on:
   push:
-    branches: [ feat/SCRUM-71 ]
+    branches: [ main ]
 
 jobs:
   deploy:

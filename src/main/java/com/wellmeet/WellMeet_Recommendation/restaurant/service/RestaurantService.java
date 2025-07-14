@@ -1,7 +1,7 @@
 package com.wellmeet.WellMeet_Recommendation.restaurant.service;
 
 import com.wellmeet.WellMeet_Recommendation.common.dto.ReviewVector;
-import com.wellmeet.WellMeet_Recommendation.common.util.ReviewVectorUtil;
+import com.wellmeet.WellMeet_Recommendation.embedding.service.EmbeddingService;
 import com.wellmeet.WellMeet_Recommendation.exception.ErrorCode;
 import com.wellmeet.WellMeet_Recommendation.exception.WellMeetException;
 import com.wellmeet.WellMeet_Recommendation.llm.dto.ExtractedInfoResponse;
@@ -23,7 +23,7 @@ public class RestaurantService {
 
         private final RestaurantRepository restaurantRepository;
         private final LLMService llmService;
-        private final ReviewVectorUtil reviewVectorUtil;
+        private final EmbeddingService embeddingService;
 
         public List<Restaurant> findWithBoundBox(BoundingBox boundingBox) {
                 return restaurantRepository.findWithBoundBox(boundingBox);
@@ -51,7 +51,7 @@ public class RestaurantService {
 
         public List<RestaurantResponse> recommendRestaurant(String query) {
                 ExtractedInfoResponse extractedInfoResponse = llmService.extractUserRequest(query);
-                ReviewVector reviewVector = reviewVectorUtil.createReviewVector(
+                ReviewVector reviewVector = embeddingService.createReviewVector(
                                 extractedInfoResponse.getVibe(),
                                 extractedInfoResponse.getFood(),
                                 extractedInfoResponse.getCompanion(),

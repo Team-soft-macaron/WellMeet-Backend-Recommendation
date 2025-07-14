@@ -1,7 +1,7 @@
 package com.wellmeet.WellMeet_Recommendation.crawlingreview.service;
 
 import com.wellmeet.WellMeet_Recommendation.common.dto.ReviewVector;
-import com.wellmeet.WellMeet_Recommendation.common.util.ReviewVectorUtil;
+import com.wellmeet.WellMeet_Recommendation.embedding.service.EmbeddingService;
 import com.wellmeet.WellMeet_Recommendation.crawlingreview.domain.CrawlingReview;
 import com.wellmeet.WellMeet_Recommendation.crawlingreview.dto.CrawlingReviewSaveRequest;
 import com.wellmeet.WellMeet_Recommendation.crawlingreview.dto.CrawlingReviewResponse;
@@ -22,7 +22,7 @@ public class CrawlingReviewService {
         private final CrawlingReviewRepository crawlingReviewRepository;
         private final RestaurantRepository restaurantRepository;
         private final LLMService llmService;
-        private final ReviewVectorUtil reviewVectorUtil;
+        private final EmbeddingService embeddingService;
 
         public CrawlingReviewResponse saveReview(CrawlingReviewSaveRequest request) {
                 // 식당 조회
@@ -34,7 +34,7 @@ public class CrawlingReviewService {
                 ExtractedInfoResponse extractedInfoResponse = llmService.extractUserRequest(request.getContent());
 
                 // 리뷰 벡터 생성
-                ReviewVector reviewVector = reviewVectorUtil.createReviewVector(
+                ReviewVector reviewVector = embeddingService.createReviewVector(
                                 extractedInfoResponse.getVibe(),
                                 extractedInfoResponse.getFood(),
                                 extractedInfoResponse.getCompanion(),
