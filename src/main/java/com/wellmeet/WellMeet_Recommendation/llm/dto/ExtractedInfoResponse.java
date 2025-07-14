@@ -6,10 +6,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class ExtractedInfoResponse {
-    private String purpose; // 모임 목적
-    private String vibe; // 분위기
-    private String companion; // 동행자 정보
-    private String food; // 음식
+    private String purpose;
+    private String vibe;
+    private String companion;
+    private String food;
 
     public ExtractedInfoResponse(String purpose, String vibe, String companion, String food) {
         this.purpose = purpose;

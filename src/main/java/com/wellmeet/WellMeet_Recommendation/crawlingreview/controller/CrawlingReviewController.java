@@ -13,7 +13,7 @@ public class CrawlingReviewController {
 
     private final CrawlingReviewService crawlingReviewService;
 
-    @PostMapping("/api/crawling-reviews")
+    @PostMapping("/api/crawling-review")
     @ResponseStatus(HttpStatus.CREATED)
     public CrawlingReviewResponse saveReview(@RequestBody CrawlingReviewSaveRequest request) {
         return crawlingReviewService.saveReview(request);
