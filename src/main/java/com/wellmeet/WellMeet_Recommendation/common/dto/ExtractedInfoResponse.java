@@ -1,4 +1,4 @@
-package com.wellmeet.WellMeet_Recommendation.llm.dto;
+package com.wellmeet.WellMeet_Recommendation.common.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -1,26 +1,22 @@
-package com.wellmeet.WellMeet_Recommendation.embedding.service;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.ai.embedding.EmbeddingResponse;
-import org.springframework.ai.openai.OpenAiEmbeddingModel;
-import org.springframework.stereotype.Service;
-
-import com.wellmeet.WellMeet_Recommendation.common.dto.ReviewVector;
+package com.wellmeet.WellMeet_Recommendation.common.util;
 
 import java.util.List;
+import org.springframework.ai.embedding.EmbeddingResponse;
+import org.springframework.ai.openai.OpenAiEmbeddingModel;
+import org.springframework.stereotype.Component;
+import com.wellmeet.WellMeet_Recommendation.common.dto.ReviewVector;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
-@Service
+@Component
 @RequiredArgsConstructor
 @Slf4j
-public class EmbeddingService {
-
+public class EmbeddingUtil {
     private final OpenAiEmbeddingModel embeddingModel;
 
     private float[] createEmbedding(String text) {
         if (text.isEmpty()) {
-            float[] result = new float[768];
-            return result;
+            return new float[768];
         }
         log.info("text: {}", text);
         EmbeddingResponse response = embeddingModel.embedForResponse(List.of(text));

@@ -17,9 +17,12 @@ public class CrawlingReview {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(columnDefinition = "TEXT")
     private String content;
+
     private String hash;
+
     @Type(VectorType.class)
     @Column(name = "vibe_vector", columnDefinition = "vector(768)")
     private float[] vibeVector;
@@ -34,6 +37,7 @@ public class CrawlingReview {
 
     @Type(VectorType.class)
     @Column(name = "purpose_vector", columnDefinition = "vector(768)")
+
     private float[] purposeVector;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id")

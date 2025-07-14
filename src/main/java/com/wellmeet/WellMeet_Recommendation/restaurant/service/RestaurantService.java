@@ -1,29 +1,30 @@
 package com.wellmeet.WellMeet_Recommendation.restaurant.service;
 
+import com.wellmeet.WellMeet_Recommendation.common.dto.ExtractedInfoResponse;
 import com.wellmeet.WellMeet_Recommendation.common.dto.ReviewVector;
-import com.wellmeet.WellMeet_Recommendation.embedding.service.EmbeddingService;
+import com.wellmeet.WellMeet_Recommendation.common.util.EmbeddingUtil;
+import com.wellmeet.WellMeet_Recommendation.common.util.LLMUtil;
 import com.wellmeet.WellMeet_Recommendation.exception.ErrorCode;
 import com.wellmeet.WellMeet_Recommendation.exception.WellMeetException;
-import com.wellmeet.WellMeet_Recommendation.llm.dto.ExtractedInfoResponse;
-import com.wellmeet.WellMeet_Recommendation.llm.service.LLMService;
 import com.wellmeet.WellMeet_Recommendation.restaurant.domain.BoundingBox;
 import com.wellmeet.WellMeet_Recommendation.restaurant.domain.Restaurant;
 import com.wellmeet.WellMeet_Recommendation.restaurant.dto.RestaurantCreateRequest;
 import com.wellmeet.WellMeet_Recommendation.restaurant.dto.RestaurantResponse;
 import com.wellmeet.WellMeet_Recommendation.restaurant.repository.RestaurantRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class RestaurantService {
 
         private final RestaurantRepository restaurantRepository;
-        private final LLMService llmService;
-        private final EmbeddingService embeddingService;
+        private final EmbeddingUtil embeddingUtil;
+        private final LLMUtil llmUtil;
 
         public List<Restaurant> findWithBoundBox(BoundingBox boundingBox) {
                 return restaurantRepository.findWithBoundBox(boundingBox);
@@ -35,7 +36,6 @@ public class RestaurantService {
         }
 
         public RestaurantResponse saveRestaurant(RestaurantCreateRequest request) {
-                float[] zeroVector = new float[768];
                 Restaurant restaurant = new Restaurant(
                                 request.getPlaceId(),
                                 request.getName(),
@@ -43,15 +43,15 @@ public class RestaurantService {
                                 request.getLatitude(),
                                 request.getLongitude(),
                                 request.getThumbnail(),
-                                new ReviewVector(zeroVector, zeroVector, zeroVector, zeroVector));
+                                new ReviewVector(new float[768], new float[768], new float[768], new float[768]));
 
                 Restaurant savedRestaurant = restaurantRepository.save(restaurant);
                 return new RestaurantResponse(savedRestaurant);
         }
 
         public List<RestaurantResponse> recommendRestaurant(String query) {
-                ExtractedInfoResponse extractedInfoResponse = llmService.extractUserRequest(query);
-                ReviewVector reviewVector = embeddingService.createReviewVector(
+                ExtractedInfoResponse extractedInfoResponse = llmUtil.extractUserRequest(query);
+                ReviewVector reviewVector = embeddingUtil.createReviewVector(
                                 extractedInfoResponse.getVibe(),
                                 extractedInfoResponse.getFood(),
                                 extractedInfoResponse.getCompanion(),
@@ -69,4 +69,5 @@ public class RestaurantService {
                                 .map(RestaurantResponse::new)
                                 .collect(Collectors.toList());
         }
+
 }
