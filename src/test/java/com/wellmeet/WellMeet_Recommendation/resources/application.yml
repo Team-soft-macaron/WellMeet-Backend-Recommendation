@@ -20,5 +20,20 @@ spring:
     hibernate:
       ddl-auto: create-drop
     defer-datasource-initialization: true
+  ai:
+    openai:
+      api-key: dummy-key
+      # Chat 모델 설정
+      chat:
+        options:
+          model: gpt-4o-mini
+          temperature: 0.3
+      
+      # Embedding 모델 설정
+      embedding:
+        options:
+          model: text-embedding-3-small
+          dimensions: 768
+
 cors:
   origin: http://localhost:5173
