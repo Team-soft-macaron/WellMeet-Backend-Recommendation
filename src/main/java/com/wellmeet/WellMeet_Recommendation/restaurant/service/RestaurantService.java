@@ -5,9 +5,6 @@ import com.wellmeet.WellMeet_Recommendation.common.domain.ReviewVector;
 import com.wellmeet.WellMeet_Recommendation.common.dto.ExtractedInfoResponse;
 import com.wellmeet.WellMeet_Recommendation.common.util.EmbeddingUtil;
 import com.wellmeet.WellMeet_Recommendation.common.util.LLMUtil;
-import com.wellmeet.WellMeet_Recommendation.exception.ErrorCode;
-import com.wellmeet.WellMeet_Recommendation.exception.WellMeetException;
-import com.wellmeet.WellMeet_Recommendation.restaurant.domain.BoundingBox;
 import com.wellmeet.WellMeet_Recommendation.restaurant.domain.Restaurant;
 import com.wellmeet.WellMeet_Recommendation.restaurant.dto.RestaurantCreateRequest;
 import com.wellmeet.WellMeet_Recommendation.restaurant.dto.RestaurantResponse;
@@ -26,15 +23,6 @@ public class RestaurantService {
         private final RestaurantRepository restaurantRepository;
         private final EmbeddingUtil embeddingUtil;
         private final LLMUtil llmUtil;
-
-        public List<Restaurant> findWithBoundBox(BoundingBox boundingBox) {
-                return restaurantRepository.findWithBoundBox(boundingBox);
-        }
-
-        public Restaurant getById(Long id) {
-                return restaurantRepository.findById(id)
-                                .orElseThrow(() -> new WellMeetException(ErrorCode.RESTAURANT_NOT_FOUND));
-        }
 
         public RestaurantResponse saveRestaurant(RestaurantCreateRequest request) {
                 Restaurant restaurant = new Restaurant(

@@ -11,7 +11,7 @@ public class ExtractedInfoResponse {
     private String companion;
     private String food;
 
-    public ExtractedInfoResponse(String purpose, String vibe, String companion, String food) {
+    public ExtractedInfoResponse(String vibe, String food, String companion, String purpose) {
         this.purpose = purpose;
         this.vibe = vibe;
         this.companion = companion;
