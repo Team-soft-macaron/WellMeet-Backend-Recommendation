@@ -4,7 +4,8 @@ import java.util.List;
 import org.springframework.ai.embedding.EmbeddingResponse;
 import org.springframework.ai.openai.OpenAiEmbeddingModel;
 import org.springframework.stereotype.Component;
-import com.wellmeet.WellMeet_Recommendation.common.dto.ReviewVector;
+import com.wellmeet.WellMeet_Recommendation.common.domain.ReviewVector;
+import com.wellmeet.WellMeet_Recommendation.common.constant.Constant;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -14,21 +15,21 @@ import lombok.extern.slf4j.Slf4j;
 public class EmbeddingUtil {
     private final OpenAiEmbeddingModel embeddingModel;
 
-    private float[] createEmbedding(String text) {
-        if (text.isEmpty()) {
-            return new float[768];
-        }
-        log.info("text: {}", text);
-        EmbeddingResponse response = embeddingModel.embedForResponse(List.of(text));
-        return response.getResult().getOutput();
-
-    }
-
     public ReviewVector createReviewVector(String vibe, String food, String companion, String purpose) {
         return new ReviewVector(
                 createEmbedding(vibe),
                 createEmbedding(food),
                 createEmbedding(companion),
                 createEmbedding(purpose));
+    }
+
+    private float[] createEmbedding(String text) {
+        if (text.isEmpty()) {
+            return new float[Constant.OPENAI_EMBEDDING_DIMENSION];
+        }
+        log.info("text: {}", text);
+        EmbeddingResponse response = embeddingModel.embedForResponse(List.of(text));
+        return response.getResult().getOutput();
+
     }
 }

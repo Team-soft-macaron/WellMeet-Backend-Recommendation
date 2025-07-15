@@ -1,7 +1,8 @@
 package com.wellmeet.WellMeet_Recommendation.restaurant.service;
 
+import com.wellmeet.WellMeet_Recommendation.common.constant.Constant;
+import com.wellmeet.WellMeet_Recommendation.common.domain.ReviewVector;
 import com.wellmeet.WellMeet_Recommendation.common.dto.ExtractedInfoResponse;
-import com.wellmeet.WellMeet_Recommendation.common.dto.ReviewVector;
 import com.wellmeet.WellMeet_Recommendation.common.util.EmbeddingUtil;
 import com.wellmeet.WellMeet_Recommendation.common.util.LLMUtil;
 import com.wellmeet.WellMeet_Recommendation.exception.ErrorCode;
@@ -43,7 +44,10 @@ public class RestaurantService {
                                 request.getLatitude(),
                                 request.getLongitude(),
                                 request.getThumbnail(),
-                                new ReviewVector(new float[768], new float[768], new float[768], new float[768]));
+                                new ReviewVector(new float[Constant.OPENAI_EMBEDDING_DIMENSION],
+                                                new float[Constant.OPENAI_EMBEDDING_DIMENSION],
+                                                new float[Constant.OPENAI_EMBEDDING_DIMENSION],
+                                                new float[Constant.OPENAI_EMBEDDING_DIMENSION]));
 
                 Restaurant savedRestaurant = restaurantRepository.save(restaurant);
                 return new RestaurantResponse(savedRestaurant);

@@ -1,6 +1,6 @@
 package com.wellmeet.WellMeet_Recommendation.crawlingreview.domain;
 
-import com.wellmeet.WellMeet_Recommendation.common.dto.ReviewVector;
+import com.wellmeet.WellMeet_Recommendation.common.domain.ReviewVector;
 import com.wellmeet.WellMeet_Recommendation.restaurant.domain.Restaurant;
 import com.wellmeet.WellMeet_Recommendation.restaurant.domain.VectorType;
 import jakarta.persistence.*;
@@ -37,7 +37,6 @@ public class CrawlingReview {
 
     @Type(VectorType.class)
     @Column(name = "purpose_vector", columnDefinition = "vector(768)")
-
     private float[] purposeVector;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id")

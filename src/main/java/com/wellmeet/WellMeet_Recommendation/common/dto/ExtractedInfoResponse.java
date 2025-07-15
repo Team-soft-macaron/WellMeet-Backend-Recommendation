@@ -1,9 +1,9 @@
 package com.wellmeet.WellMeet_Recommendation.common.dto;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Data
+@Getter
 @NoArgsConstructor
 public class ExtractedInfoResponse {
     private String purpose;

@@ -1,7 +1,7 @@
 package com.wellmeet.WellMeet_Recommendation.restaurant.domain;
 
 import com.wellmeet.WellMeet_Recommendation.common.domain.BaseEntity;
-import com.wellmeet.WellMeet_Recommendation.common.dto.ReviewVector;
+import com.wellmeet.WellMeet_Recommendation.common.domain.ReviewVector;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
