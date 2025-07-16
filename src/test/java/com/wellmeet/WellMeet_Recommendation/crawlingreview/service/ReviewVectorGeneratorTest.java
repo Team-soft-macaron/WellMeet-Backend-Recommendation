@@ -35,7 +35,7 @@ public class ReviewVectorGeneratorTest {
 
         @Test
         @DisplayName("정상적인 리뷰 내용이 주어졌을 때 ReviewVector를 생성한다")
-        void generateFromContent_withValidContent_shouldReturnReviewVector() {
+        void generateFromContentSuccess() {
                 // given
                 final String testContent = TEST_CONTENT;
                 final ExtractedInfoResponse mockExtractedInfo = new ExtractedInfoResponse(VIBE, FOOD, COMPANION,

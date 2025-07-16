@@ -75,4 +75,8 @@ public class Restaurant extends BaseEntity {
         this.purposeVector = reviewVector.getPurposeVector();
     }
 
+    public ReviewVector createReviewVector() {
+        return new ReviewVector(vibeVector, foodVector, companionVector, purposeVector);
+    }
+
 }

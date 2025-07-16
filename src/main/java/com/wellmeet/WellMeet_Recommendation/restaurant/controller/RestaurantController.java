@@ -23,7 +23,7 @@ public class RestaurantController {
         return restaurantService.saveRestaurant(request);
     }
 
-    @PostMapping("/api/restaurant/recommend")
+    @PostMapping("/api/restaurants/recommend")
     @ResponseStatus(HttpStatus.OK)
     public List<RestaurantResponse> recommendRestaurants(@RequestBody String query) {
         return restaurantService.recommendRestaurant(query);

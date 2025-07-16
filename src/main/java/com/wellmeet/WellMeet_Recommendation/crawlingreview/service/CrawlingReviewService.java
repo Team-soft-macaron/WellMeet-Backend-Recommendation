@@ -42,15 +42,8 @@ public class CrawlingReviewService {
         private void updateRestaurantVectorsIncremental(Restaurant restaurant, ReviewVector newVector) {
                 long reviewCount = crawlingReviewRepository.countByRestaurantId(restaurant.getId());
 
-                ReviewVector oldVector = new ReviewVector(
-                                restaurant.getVibeVector(),
-                                restaurant.getFoodVector(),
-                                restaurant.getCompanionVector(),
-                                restaurant.getPurposeVector());
-                ReviewVector updatedVector = ReviewVector.calculateIncrementalAverage(
-                                oldVector,
-                                newVector,
-                                reviewCount);
+                ReviewVector oldVector = restaurant.createReviewVector();
+                ReviewVector updatedVector = oldVector.calculateIncrementalAverage(newVector, reviewCount);
                 restaurant.updateVectors(updatedVector);
 
                 restaurantRepository.save(restaurant);

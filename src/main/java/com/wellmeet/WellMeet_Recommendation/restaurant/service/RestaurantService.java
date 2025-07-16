@@ -2,9 +2,7 @@ package com.wellmeet.WellMeet_Recommendation.restaurant.service;
 
 import com.wellmeet.WellMeet_Recommendation.common.constant.Constant;
 import com.wellmeet.WellMeet_Recommendation.common.domain.ReviewVector;
-import com.wellmeet.WellMeet_Recommendation.common.dto.ExtractedInfoResponse;
-import com.wellmeet.WellMeet_Recommendation.common.util.EmbeddingUtil;
-import com.wellmeet.WellMeet_Recommendation.common.util.LLMUtil;
+import com.wellmeet.WellMeet_Recommendation.crawlingreview.service.ReviewVectorGenerator;
 import com.wellmeet.WellMeet_Recommendation.restaurant.domain.Restaurant;
 import com.wellmeet.WellMeet_Recommendation.restaurant.dto.RestaurantCreateRequest;
 import com.wellmeet.WellMeet_Recommendation.restaurant.dto.RestaurantResponse;
@@ -21,8 +19,7 @@ import java.util.stream.Collectors;
 public class RestaurantService {
 
         private final RestaurantRepository restaurantRepository;
-        private final EmbeddingUtil embeddingUtil;
-        private final LLMUtil llmUtil;
+        private final ReviewVectorGenerator reviewVectorGenerator;
 
         public RestaurantResponse saveRestaurant(RestaurantCreateRequest request) {
                 Restaurant restaurant = new Restaurant(
@@ -42,12 +39,7 @@ public class RestaurantService {
         }
 
         public List<RestaurantResponse> recommendRestaurant(String query) {
-                ExtractedInfoResponse extractedInfoResponse = llmUtil.extractUserRequest(query);
-                ReviewVector reviewVector = embeddingUtil.createReviewVector(
-                                extractedInfoResponse.getVibe(),
-                                extractedInfoResponse.getFood(),
-                                extractedInfoResponse.getCompanion(),
-                                extractedInfoResponse.getPurpose());
+                ReviewVector reviewVector = reviewVectorGenerator.generateFromContent(query);
 
                 // 데이터베이스에서 직접 합산된 유사도로 정렬
                 List<Restaurant> topRestaurants = restaurantRepository.findTopByCombinedSimilarity(

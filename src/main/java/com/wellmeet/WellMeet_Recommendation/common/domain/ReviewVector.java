@@ -17,20 +17,19 @@ public class ReviewVector {
         this.purposeVector = purposeVector;
     }
 
-    public static ReviewVector calculateIncrementalAverage(ReviewVector oldAverage, ReviewVector newVector,
-            long totalCount) {
-        float[] vibe = calculateIncrementalAverageArray(oldAverage.getVibeVector(), newVector.getVibeVector(),
+    public ReviewVector calculateIncrementalAverage(ReviewVector newVector, long totalCount) {
+        float[] vibe = calculateIncrementalAverageArray(vibeVector, newVector.getVibeVector(),
                 totalCount);
-        float[] food = calculateIncrementalAverageArray(oldAverage.getFoodVector(), newVector.getFoodVector(),
+        float[] food = calculateIncrementalAverageArray(foodVector, newVector.getFoodVector(),
                 totalCount);
-        float[] companion = calculateIncrementalAverageArray(oldAverage.getCompanionVector(),
+        float[] companion = calculateIncrementalAverageArray(companionVector,
                 newVector.getCompanionVector(), totalCount);
-        float[] purpose = calculateIncrementalAverageArray(oldAverage.getPurposeVector(),
+        float[] purpose = calculateIncrementalAverageArray(purposeVector,
                 newVector.getPurposeVector(), totalCount);
         return new ReviewVector(vibe, food, companion, purpose);
     }
 
-    private static float[] calculateIncrementalAverageArray(float[] oldAvg, float[] newVec, long totalCount) {
+    private float[] calculateIncrementalAverageArray(float[] oldAvg, float[] newVec, long totalCount) {
         float[] result = new float[Constant.OPENAI_EMBEDDING_DIMENSION];
         float weight = (totalCount - 1) / (float) totalCount;
         float newWeight = 1.0f / totalCount;

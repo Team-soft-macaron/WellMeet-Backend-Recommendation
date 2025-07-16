@@ -20,7 +20,8 @@ public class LLMUtil {
     private final OpenAiChatModel chatModel;
 
     public ExtractedInfoResponse extractUserRequest(String userRequest) {
-        var outputConverter = new BeanOutputConverter<>(ExtractedInfoResponse.class);
+        BeanOutputConverter<ExtractedInfoResponse> outputConverter = new BeanOutputConverter<>(
+                ExtractedInfoResponse.class);
 
         final String systemPrompt = """
                 당신은 한국어 모임 요청을 분석하는 전문가입니다.
@@ -40,7 +41,7 @@ public class LLMUtil {
 
                 """ + outputConverter.getFormat();
 
-        final var prompt = new Prompt(List.of(
+        final Prompt prompt = new Prompt(List.of(
                 new SystemMessage(systemPrompt),
                 new UserMessage("다음 요청을 분석해주세요: " + userRequest)));
 
