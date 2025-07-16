@@ -8,7 +8,7 @@ RETURNS vector AS $$
 $$ LANGUAGE sql IMMUTABLE;
 
 -- Restaurant 테이블 생성
-CREATE TABLE restaurant (
+CREATE TABLE IF NOT EXISTS restaurant (
     id BIGSERIAL PRIMARY KEY,
     place_id VARCHAR(255) UNIQUE,
     name VARCHAR(255) NOT NULL,
@@ -25,7 +25,7 @@ CREATE TABLE restaurant (
 );
 
 -- CrawlingReview 테이블 생성
-CREATE TABLE crawling_review (
+CREATE TABLE IF NOT EXISTS crawling_review (
     id BIGSERIAL PRIMARY KEY,
     content TEXT,
     hash VARCHAR(255),

@@ -1,0 +1,36 @@
+version: '3.8'
+services:
+  recommendation-db:
+    image: pgvector/pgvector:pg16
+    container_name: wellmeet-recommendation-db
+    environment:
+      POSTGRES_DB: recommendation
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "0000"
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - ./init-db:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  recommendation-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: wellmeet-recommendation-app
+    depends_on:
+      recommendation-db:
+        condition: service_healthy
+    environment:
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+    ports:
+      - "8080:8080"
+    restart: on-failure
+
+volumes:
+  db-data:
