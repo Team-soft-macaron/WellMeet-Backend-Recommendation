@@ -1,14 +1,21 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/restaurant
+    url: jdbc:postgresql://recommendation-db:5432/recommendation
     username: postgres
     password: "0000"
     driver-class-name: org.postgresql.Driver
-
+  sql:
+    init:
+      mode: always
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    defer-datasource-initialization: true
+    generate-ddl: true
   ai:
     openai:
       api-key: ${OPENAI_API_KEY}
