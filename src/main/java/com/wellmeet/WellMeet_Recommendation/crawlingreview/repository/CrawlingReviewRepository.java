@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CrawlingReviewRepository extends JpaRepository<CrawlingReview, Long> {
+    long countByRestaurantId(Long restaurantId);
 }

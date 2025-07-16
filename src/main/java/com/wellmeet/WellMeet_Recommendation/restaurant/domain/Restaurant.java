@@ -1,13 +1,13 @@
 package com.wellmeet.WellMeet_Recommendation.restaurant.domain;
 
 import com.wellmeet.WellMeet_Recommendation.common.domain.BaseEntity;
+import com.wellmeet.WellMeet_Recommendation.common.domain.ReviewVector;
+
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
+import org.hibernate.annotations.Type;
 
 @Getter
 @Entity
@@ -36,36 +36,47 @@ public class Restaurant extends BaseEntity {
 
     private String thumbnail;
 
-    @JdbcTypeCode(SqlTypes.VECTOR)
-    @Column(name = "vibe_vector", columnDefinition = "vector(384)")
+    // @JdbcTypeCode(SqlTypes.VECTOR)
+    @Type(VectorType.class)
+    @Column(name = "vibe_vector", columnDefinition = "vector(768)")
     private float[] vibeVector;
 
-    @JdbcTypeCode(SqlTypes.VECTOR)
-    @Column(name = "food_vector", columnDefinition = "vector(384)")
+    @Type(VectorType.class)
+    @Column(name = "food_vector", columnDefinition = "vector(768)")
     private float[] foodVector;
 
-    @JdbcTypeCode(SqlTypes.VECTOR)
-    @Column(name = "companion_vector", columnDefinition = "vector(384)")
+    @Type(VectorType.class)
+    @Column(name = "companion_vector", columnDefinition = "vector(768)")
     private float[] companionVector;
 
-    @JdbcTypeCode(SqlTypes.VECTOR)
-    @Column(name = "purpose_vector", columnDefinition = "vector(384)")
+    @Type(VectorType.class)
+    @Column(name = "purpose_vector", columnDefinition = "vector(768)")
     private float[] purposeVector;
 
-    @Builder
     public Restaurant(String placeId, String name, String address,
-                      double latitude, double longitude, String thumbnail,
-                      float[] vibeVector, float[] foodVector,
-                      float[] companionVector, float[] purposeVector) {
+            double latitude, double longitude, String thumbnail,
+            ReviewVector reviewVector) {
         this.placeId = placeId;
         this.name = name;
         this.address = address;
         this.latitude = latitude;
         this.longitude = longitude;
         this.thumbnail = thumbnail;
-        this.vibeVector = vibeVector;
-        this.foodVector = foodVector;
-        this.companionVector = companionVector;
-        this.purposeVector = purposeVector;
+        this.vibeVector = reviewVector.getVibeVector();
+        this.foodVector = reviewVector.getFoodVector();
+        this.companionVector = reviewVector.getCompanionVector();
+        this.purposeVector = reviewVector.getPurposeVector();
     }
+
+    public void updateVectors(ReviewVector reviewVector) {
+        this.vibeVector = reviewVector.getVibeVector();
+        this.foodVector = reviewVector.getFoodVector();
+        this.companionVector = reviewVector.getCompanionVector();
+        this.purposeVector = reviewVector.getPurposeVector();
+    }
+
+    public ReviewVector createReviewVector() {
+        return new ReviewVector(vibeVector, foodVector, companionVector, purposeVector);
+    }
+
 }

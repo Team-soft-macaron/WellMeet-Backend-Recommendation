@@ -4,8 +4,6 @@ import com.wellmeet.WellMeet_Recommendation.restaurant.domain.Restaurant;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Getter
 @NoArgsConstructor
 public class RestaurantResponse {
@@ -16,6 +14,7 @@ public class RestaurantResponse {
     private double latitude;
     private double longitude;
     private String thumbnail;
+    private String placeId;
 
     public RestaurantResponse(Restaurant restaurant) {
         this.id = restaurant.getId();
@@ -24,5 +23,6 @@ public class RestaurantResponse {
         this.latitude = restaurant.getLatitude();
         this.longitude = restaurant.getLongitude();
         this.thumbnail = restaurant.getThumbnail();
+        this.placeId = restaurant.getPlaceId();
     }
 }

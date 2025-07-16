@@ -16,10 +16,10 @@ CREATE TABLE restaurant (
     latitude DOUBLE PRECISION NOT NULL,
     longitude DOUBLE PRECISION NOT NULL,
     thumbnail VARCHAR(255),
-    vibe_vector vector(384) DEFAULT zero_vector(384),
-    food_vector vector(384) DEFAULT zero_vector(384),
-    companion_vector vector(384) DEFAULT zero_vector(384),
-    purpose_vector vector(384) DEFAULT zero_vector(384),
+    vibe_vector vector(768) DEFAULT zero_vector(768),
+    food_vector vector(768) DEFAULT zero_vector(768),
+    companion_vector vector(768) DEFAULT zero_vector(768),
+    purpose_vector vector(768) DEFAULT zero_vector(768),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     modified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -30,8 +30,8 @@ CREATE TABLE crawling_review (
     content TEXT,
     hash VARCHAR(255),
     restaurant_id BIGINT REFERENCES restaurant(id),
-    vibe_vector vector(384) DEFAULT zero_vector(384),
-    food_vector vector(384) DEFAULT zero_vector(384),
-    companion_vector vector(384) DEFAULT zero_vector(384),
-    purpose_vector vector(384) DEFAULT zero_vector(384)
+    vibe_vector vector(768) DEFAULT zero_vector(768),
+    food_vector vector(768) DEFAULT zero_vector(768),
+    companion_vector vector(768) DEFAULT zero_vector(768),
+    purpose_vector vector(768) DEFAULT zero_vector(768)
 );
