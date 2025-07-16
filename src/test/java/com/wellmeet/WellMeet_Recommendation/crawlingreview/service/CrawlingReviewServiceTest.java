@@ -56,10 +56,11 @@ class CrawlingReviewServiceTest {
         when(request.getHash()).thenReturn(hash);
 
         Restaurant restaurant = mock(Restaurant.class);
-        when(restaurant.getVibeVector()).thenReturn(new float[Constant.OPENAI_EMBEDDING_DIMENSION]);
-        when(restaurant.getFoodVector()).thenReturn(new float[Constant.OPENAI_EMBEDDING_DIMENSION]);
-        when(restaurant.getCompanionVector()).thenReturn(new float[Constant.OPENAI_EMBEDDING_DIMENSION]);
-        when(restaurant.getPurposeVector()).thenReturn(new float[Constant.OPENAI_EMBEDDING_DIMENSION]);
+        when(restaurant.createReviewVector())
+                .thenReturn(new ReviewVector(new float[Constant.OPENAI_EMBEDDING_DIMENSION],
+                        new float[Constant.OPENAI_EMBEDDING_DIMENSION],
+                        new float[Constant.OPENAI_EMBEDDING_DIMENSION],
+                        new float[Constant.OPENAI_EMBEDDING_DIMENSION]));
         when(restaurant.getId()).thenReturn(1L);
         when(restaurant.getName()).thenReturn(restaurantName);
         when(restaurantRepository.findByPlaceId("1234567890")).thenReturn(Optional.of(restaurant));
