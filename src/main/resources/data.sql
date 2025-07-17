@@ -13,6 +13,7 @@ VALUES
     ( 10, 37.5454, 126.9509)
 ON CONFLICT (restaurant_id) DO NOTHING;
 
+
 -- 크롤링 리뷰 데이터 삽입
 INSERT INTO crawling_review (content, hash, restaurant_id)
 VALUES 
