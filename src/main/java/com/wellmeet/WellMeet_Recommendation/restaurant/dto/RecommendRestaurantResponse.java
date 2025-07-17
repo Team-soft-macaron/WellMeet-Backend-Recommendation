@@ -9,14 +9,10 @@ import lombok.NoArgsConstructor;
 public class RecommendRestaurantResponse {
 
     private Long id;
-    private String name;
-    private String address;
-    private String thumbnail;
+    private String restaurantId;
 
     public RecommendRestaurantResponse(Restaurant restaurant) {
         this.id = restaurant.getId();
-        this.name = restaurant.getName();
-        this.address = restaurant.getAddress();
-        this.thumbnail = restaurant.getThumbnail();
+        this.restaurantId = restaurant.getRestaurantId();
     }
 }

@@ -21,6 +21,7 @@ public class CrawlingReview {
     @Column(columnDefinition = "TEXT")
     private String content;
 
+    @Column(unique = true)
     private String hash;
 
     @Type(VectorType.class)

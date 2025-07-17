@@ -11,13 +11,11 @@ public class CrawlingReviewResponse {
     private String content;
     private String hash;
     private Long restaurantId;
-    private String restaurantName;
 
     public CrawlingReviewResponse(CrawlingReview review) {
         this.id = review.getId();
         this.content = review.getContent();
         this.hash = review.getHash();
         this.restaurantId = review.getRestaurant().getId();
-        this.restaurantName = review.getRestaurant().getName();
     }
 }

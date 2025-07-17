@@ -51,7 +51,7 @@ class CrawlingReviewServiceTest {
         String hash = "hash123";
 
         CrawlingReviewSaveRequest request = mock(CrawlingReviewSaveRequest.class);
-        when(request.getPlaceId()).thenReturn("1234567890");
+        when(request.getRestaurantId()).thenReturn(1L);
         when(request.getContent()).thenReturn(restaurantName);
         when(request.getHash()).thenReturn(hash);
 
@@ -62,8 +62,8 @@ class CrawlingReviewServiceTest {
                         new float[Constant.OPENAI_EMBEDDING_DIMENSION],
                         new float[Constant.OPENAI_EMBEDDING_DIMENSION]));
         when(restaurant.getId()).thenReturn(1L);
-        when(restaurant.getName()).thenReturn(restaurantName);
-        when(restaurantRepository.findByPlaceId("1234567890")).thenReturn(Optional.of(restaurant));
+        when(restaurant.getRestaurantId()).thenReturn(restaurantName);
+        when(restaurantRepository.findById(1L)).thenReturn(Optional.of(restaurant));
 
         ReviewVector reviewVector = mock(ReviewVector.class);
         when(reviewVector.getVibeVector()).thenReturn(new float[Constant.OPENAI_EMBEDDING_DIMENSION]);
@@ -78,10 +78,9 @@ class CrawlingReviewServiceTest {
         CrawlingReviewResponse response = crawlingReviewService.saveReview(request);
 
         // then
-        verify(restaurantRepository, times(1)).findByPlaceId("1234567890");
+        verify(restaurantRepository, times(1)).findById(1L);
         assertEquals(1L, response.getRestaurantId());
         assertEquals(hash, response.getHash());
-        assertEquals(restaurantName, response.getRestaurantName());
     }
 
     @Test
@@ -89,8 +88,8 @@ class CrawlingReviewServiceTest {
     void saveReviewRestaurantNotFound() {
         // given
         CrawlingReviewSaveRequest request = mock(CrawlingReviewSaveRequest.class);
-        when(request.getPlaceId()).thenReturn("1234567890");
-        when(restaurantRepository.findByPlaceId("1234567890")).thenReturn(Optional.empty());
+        when(request.getRestaurantId()).thenReturn(1L);
+        when(restaurantRepository.findById(1L)).thenReturn(Optional.empty());
 
         // when, then
         WellMeetException ex = assertThrows(WellMeetException.class, () -> crawlingReviewService.saveReview(request));

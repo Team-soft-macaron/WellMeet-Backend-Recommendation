@@ -21,7 +21,7 @@ public class CrawlingReviewService {
         private final ReviewVectorGenerator reviewVectorGenerator;
 
         public CrawlingReviewResponse saveReview(CrawlingReviewSaveRequest request) {
-                Restaurant restaurant = restaurantRepository.findByPlaceId(request.getPlaceId())
+                Restaurant restaurant = restaurantRepository.findById(request.getRestaurantId())
                                 .orElseThrow(() -> new WellMeetException(ErrorCode.RESTAURANT_NOT_FOUND));
 
                 ReviewVector reviewVector = reviewVectorGenerator.generateFromContent(request.getContent());

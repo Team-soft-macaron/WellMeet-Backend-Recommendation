@@ -1,6 +1,7 @@
 package com.wellmeet.WellMeet_Recommendation.restaurant.controller;
 
 import com.wellmeet.WellMeet_Recommendation.restaurant.dto.RestaurantCreateRequest;
+import com.wellmeet.WellMeet_Recommendation.restaurant.dto.RestaurantDetailResponse;
 import com.wellmeet.WellMeet_Recommendation.restaurant.dto.RestaurantResponse;
 import com.wellmeet.WellMeet_Recommendation.restaurant.service.RestaurantService;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,7 @@ public class RestaurantController {
 
     @PostMapping("/api/restaurants/recommend")
     @ResponseStatus(HttpStatus.OK)
-    public List<RestaurantResponse> recommendRestaurants(@RequestBody String query) {
+    public List<RestaurantDetailResponse> recommendRestaurants(@RequestBody String query) {
         return restaurantService.recommendRestaurant(query);
     }
 }
