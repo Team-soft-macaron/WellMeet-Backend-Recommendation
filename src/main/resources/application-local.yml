@@ -30,3 +30,7 @@ spring:
         options:
           model: text-embedding-3-small
           dimensions: 768
+
+services:
+  restaurant:
+    url: http://host.docker.internal:8080

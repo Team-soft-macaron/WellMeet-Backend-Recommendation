@@ -11,22 +11,16 @@ import org.hibernate.annotations.Type;
 
 @Getter
 @Entity
-@Table(name = "restaurant")
+@Table(name = "restaurant_vector")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Restaurant extends BaseEntity {
+public class RestaurantVector extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(unique = true)
-    private String placeId;
-
-    @Column(nullable = false)
-    private String name;
-
-    @Column(nullable = false)
-    private String address;
+    private String restaurantId;
 
     @Column(nullable = false)
     private double latitude;
@@ -34,9 +28,6 @@ public class Restaurant extends BaseEntity {
     @Column(nullable = false)
     private double longitude;
 
-    private String thumbnail;
-
-    // @JdbcTypeCode(SqlTypes.VECTOR)
     @Type(VectorType.class)
     @Column(name = "vibe_vector", columnDefinition = "vector(768)")
     private float[] vibeVector;
@@ -53,15 +44,10 @@ public class Restaurant extends BaseEntity {
     @Column(name = "purpose_vector", columnDefinition = "vector(768)")
     private float[] purposeVector;
 
-    public Restaurant(String placeId, String name, String address,
-            double latitude, double longitude, String thumbnail,
-            ReviewVector reviewVector) {
-        this.placeId = placeId;
-        this.name = name;
-        this.address = address;
+    public RestaurantVector(String restaurantId, double latitude, double longitude, ReviewVector reviewVector) {
+        this.restaurantId = restaurantId;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.thumbnail = thumbnail;
         this.vibeVector = reviewVector.getVibeVector();
         this.foodVector = reviewVector.getFoodVector();
         this.companionVector = reviewVector.getCompanionVector();

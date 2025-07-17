@@ -1,17 +1,18 @@
 -- 레스토랑 데이터 삽입
-INSERT INTO restaurant (place_id, name, address, latitude, longitude, thumbnail)
+INSERT INTO restaurant_vector (restaurant_id, latitude, longitude)
 VALUES 
-    ('12345', '어랑생선구이', '서울 마포구 마포대로 109 롯데캐슬프레지던트 지하1층', 37.5445, 126.9517, 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800'),
-    ('234', '공덕족발', '서울 마포구 백범로 96', 37.5451, 126.9513, 'https://images.unsplash.com/photo-1552566626-52f8b828add9?w=800'),
-    ('235', '명동교자 공덕점', '서울 마포구 마포대로 92', 37.5433, 126.9500, 'https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?w=800'),
-    ('236', '스시도쿠', '서울 마포구 도화길 21', 37.5456, 126.9502, 'https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=800'),
-    ('237', '화로상회', '서울 마포구 백범로 125', 37.5463, 126.9498, 'https://images.unsplash.com/photo-1544025162-d76694265947?w=800'),
-    ('238', '봉추찜닭 공덕점', '서울 마포구 마포대로11길 12', 37.5442, 126.9525, 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800'),
-    ('239', '육대장', '서울 마포구 마포대로 109 지하1층', 37.5445, 126.9517, 'https://images.unsplash.com/photo-1590846406792-0adc7f938f1d?w=800'),
-    ('240', '제주몬트락', '서울 마포구 백범로 23', 37.5438, 126.9530, 'https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=800'),
-    ('241', '텐동요츠야', '서울 마포구 마포대로 92 효성해링턴스퀘어 B동', 37.5448, 126.9521, 'https://images.unsplash.com/photo-1592861956120-e524fc739696?w=800'),
-    ('242', '더플레이스', '서울 마포구 독막로 9', 37.5454, 126.9509, 'https://images.unsplash.com/photo-1554679665-f5537f187268?w=800')
-ON CONFLICT (place_id) DO NOTHING;
+    ( 1, 37.5445, 126.9517),
+    ( 2, 37.5451, 126.9513),
+    ( 3, 37.5433, 126.9500),
+    ( 4, 37.5456, 126.9502),
+    ( 5, 37.5463, 126.9498),
+    ( 6, 37.5442, 126.9525),
+    ( 7, 37.5445, 126.9517),
+    ( 8, 37.5438, 126.9530),
+    ( 9, 37.5448, 126.9521),
+    ( 10, 37.5454, 126.9509)
+ON CONFLICT (restaurant_id) DO NOTHING;
+
 
 -- 크롤링 리뷰 데이터 삽입
 INSERT INTO crawling_review (content, hash, restaurant_id)

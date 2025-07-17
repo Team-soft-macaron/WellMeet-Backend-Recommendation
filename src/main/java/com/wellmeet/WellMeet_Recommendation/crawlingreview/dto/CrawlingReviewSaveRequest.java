@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class CrawlingReviewSaveRequest {
-    private String placeId;
+    private Long restaurantId;
     private String content;
     private String hash;
 }

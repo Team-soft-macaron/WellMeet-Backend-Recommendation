@@ -37,3 +37,7 @@ spring:
 
 cors:
   origin: http://localhost:5173
+
+services:
+  restaurant:
+    url: http://host.docker.internal:8080
