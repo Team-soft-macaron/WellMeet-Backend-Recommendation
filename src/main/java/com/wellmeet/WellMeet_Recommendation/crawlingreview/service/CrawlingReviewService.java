@@ -8,7 +8,7 @@ import com.wellmeet.WellMeet_Recommendation.crawlingreview.repository.CrawlingRe
 import com.wellmeet.WellMeet_Recommendation.exception.ErrorCode;
 import com.wellmeet.WellMeet_Recommendation.exception.WellMeetException;
 import com.wellmeet.WellMeet_Recommendation.restaurant.domain.RestaurantVector;
-import com.wellmeet.WellMeet_Recommendation.restaurant.repository.RestaurantRepository;
+import com.wellmeet.WellMeet_Recommendation.restaurant.repository.RestaurantVectorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,11 +17,11 @@ import org.springframework.stereotype.Service;
 public class CrawlingReviewService {
 
         private final CrawlingReviewRepository crawlingReviewRepository;
-        private final RestaurantRepository restaurantRepository;
+        private final RestaurantVectorRepository restaurantVectorRepository;
         private final ReviewVectorGenerator reviewVectorGenerator;
 
         public CrawlingReviewResponse saveReview(CrawlingReviewSaveRequest request) {
-                RestaurantVector restaurant = restaurantRepository.findById(request.getRestaurantId())
+                RestaurantVector restaurant = restaurantVectorRepository.findById(request.getRestaurantId())
                                 .orElseThrow(() -> new WellMeetException(ErrorCode.RESTAURANT_NOT_FOUND));
 
                 ReviewVector reviewVector = reviewVectorGenerator.generateFromContent(request.getContent());
@@ -46,6 +46,6 @@ public class CrawlingReviewService {
                 ReviewVector updatedVector = oldVector.calculateIncrementalAverage(newVector, reviewCount);
                 restaurant.updateVectors(updatedVector);
 
-                restaurantRepository.save(restaurant);
+                restaurantVectorRepository.save(restaurant);
         }
 }

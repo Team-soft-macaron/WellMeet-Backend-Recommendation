@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface RestaurantRepository extends JpaRepository<RestaurantVector, Long> {
+public interface RestaurantVectorRepository extends JpaRepository<RestaurantVector, Long> {
 
     @Query(value = """
             WITH similarity_calc AS (

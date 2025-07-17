@@ -8,7 +8,7 @@ import com.wellmeet.WellMeet_Recommendation.restaurant.domain.RestaurantVector;
 import com.wellmeet.WellMeet_Recommendation.restaurant.dto.RestaurantCreateRequest;
 import com.wellmeet.WellMeet_Recommendation.restaurant.dto.RestaurantDetailResponse;
 import com.wellmeet.WellMeet_Recommendation.restaurant.dto.RestaurantResponse;
-import com.wellmeet.WellMeet_Recommendation.restaurant.repository.RestaurantRepository;
+import com.wellmeet.WellMeet_Recommendation.restaurant.repository.RestaurantVectorRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,9 +19,9 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class RestaurantService {
+public class RestaurantVectorService {
 
-        private final RestaurantRepository restaurantRepository;
+        private final RestaurantVectorRepository restaurantVectorRepository;
         private final ReviewVectorGenerator reviewVectorGenerator;
         private final RestaurantClient restaurantClient;
 
@@ -35,7 +35,7 @@ public class RestaurantService {
                                                 new float[Constant.OPENAI_EMBEDDING_DIMENSION],
                                                 new float[Constant.OPENAI_EMBEDDING_DIMENSION]));
 
-                RestaurantVector savedRestaurant = restaurantRepository.save(restaurant);
+                RestaurantVector savedRestaurant = restaurantVectorRepository.save(restaurant);
                 return new RestaurantResponse(savedRestaurant);
         }
 
@@ -44,7 +44,7 @@ public class RestaurantService {
                 ReviewVector reviewVector = reviewVectorGenerator.generateFromContent(query);
 
                 // 데이터베이스에서 직접 합산된 유사도로 정렬
-                List<Long> topRestaurants = restaurantRepository.findTopRestaurantIdsByCombinedSimilarity(
+                List<Long> topRestaurants = restaurantVectorRepository.findTopRestaurantIdsByCombinedSimilarity(
                                 reviewVector.getVibeVector(),
                                 reviewVector.getFoodVector(),
                                 reviewVector.getCompanionVector(),

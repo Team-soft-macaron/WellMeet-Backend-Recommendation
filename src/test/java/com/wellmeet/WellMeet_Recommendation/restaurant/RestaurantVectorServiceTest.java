@@ -21,14 +21,14 @@ import com.wellmeet.WellMeet_Recommendation.common.domain.ReviewVector;
 import com.wellmeet.WellMeet_Recommendation.crawlingreview.service.ReviewVectorGenerator;
 import com.wellmeet.WellMeet_Recommendation.restaurant.client.RestaurantClient;
 import com.wellmeet.WellMeet_Recommendation.restaurant.dto.RestaurantDetailResponse;
-import com.wellmeet.WellMeet_Recommendation.restaurant.repository.RestaurantRepository;
-import com.wellmeet.WellMeet_Recommendation.restaurant.service.RestaurantService;
+import com.wellmeet.WellMeet_Recommendation.restaurant.repository.RestaurantVectorRepository;
+import com.wellmeet.WellMeet_Recommendation.restaurant.service.RestaurantVectorService;
 
 @ExtendWith(MockitoExtension.class)
-public class RestaurantServiceTest {
+public class RestaurantVectorServiceTest {
 
         @Mock
-        private RestaurantRepository restaurantRepository;
+        private RestaurantVectorRepository restaurantVectorRepository;
 
         @Mock
         private ReviewVectorGenerator reviewVectorGenerator;
@@ -37,7 +37,7 @@ public class RestaurantServiceTest {
         private RestaurantClient restaurantClient;
 
         @InjectMocks
-        private RestaurantService restaurantService;
+        private RestaurantVectorService restaurantVectorService;
 
         @Test
         @DisplayName("쿼리를 입력받아 추천 레스토랑 목록을 반환한다")
@@ -62,7 +62,7 @@ public class RestaurantServiceTest {
                                         .thenReturn(mockRestaurants.get(i));
                 }
                 when(reviewVectorGenerator.generateFromContent(testQuery)).thenReturn(mockReviewVector);
-                when(restaurantRepository.findTopRestaurantIdsByCombinedSimilarity(
+                when(restaurantVectorRepository.findTopRestaurantIdsByCombinedSimilarity(
                                 mockReviewVector.getVibeVector(),
                                 mockReviewVector.getFoodVector(),
                                 mockReviewVector.getCompanionVector(),
@@ -70,7 +70,7 @@ public class RestaurantServiceTest {
                                 5))
                                 .thenReturn(mockRestaurants.stream().map(RestaurantDetailResponse::getId)
                                                 .collect(Collectors.toList()));
-                List<RestaurantDetailResponse> result = restaurantService.recommendRestaurant(testQuery);
+                List<RestaurantDetailResponse> result = restaurantVectorService.recommendRestaurant(testQuery);
 
                 // then
                 assertNotNull(result);
@@ -95,7 +95,7 @@ public class RestaurantServiceTest {
                                         () -> assertEquals(expectedRestaurant.getThumbnail(), response.getThumbnail()));
                 }
                 verify(reviewVectorGenerator, times(1)).generateFromContent(testQuery);
-                verify(restaurantRepository, times(1)).findTopRestaurantIdsByCombinedSimilarity(
+                verify(restaurantVectorRepository, times(1)).findTopRestaurantIdsByCombinedSimilarity(
                                 mockReviewVector.getVibeVector(),
                                 mockReviewVector.getFoodVector(),
                                 mockReviewVector.getCompanionVector(),
