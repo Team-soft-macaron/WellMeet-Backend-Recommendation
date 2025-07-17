@@ -7,7 +7,7 @@ import com.wellmeet.WellMeet_Recommendation.crawlingreview.dto.CrawlingReviewRes
 import com.wellmeet.WellMeet_Recommendation.crawlingreview.repository.CrawlingReviewRepository;
 import com.wellmeet.WellMeet_Recommendation.exception.ErrorCode;
 import com.wellmeet.WellMeet_Recommendation.exception.WellMeetException;
-import com.wellmeet.WellMeet_Recommendation.restaurant.domain.Restaurant;
+import com.wellmeet.WellMeet_Recommendation.restaurant.domain.RestaurantVector;
 import com.wellmeet.WellMeet_Recommendation.restaurant.repository.RestaurantRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,7 +21,7 @@ public class CrawlingReviewService {
         private final ReviewVectorGenerator reviewVectorGenerator;
 
         public CrawlingReviewResponse saveReview(CrawlingReviewSaveRequest request) {
-                Restaurant restaurant = restaurantRepository.findById(request.getRestaurantId())
+                RestaurantVector restaurant = restaurantRepository.findById(request.getRestaurantId())
                                 .orElseThrow(() -> new WellMeetException(ErrorCode.RESTAURANT_NOT_FOUND));
 
                 ReviewVector reviewVector = reviewVectorGenerator.generateFromContent(request.getContent());
@@ -39,7 +39,7 @@ public class CrawlingReviewService {
                 return new CrawlingReviewResponse(savedCrawlingReview);
         }
 
-        private void updateRestaurantVectorsIncremental(Restaurant restaurant, ReviewVector newVector) {
+        private void updateRestaurantVectorsIncremental(RestaurantVector restaurant, ReviewVector newVector) {
                 long reviewCount = crawlingReviewRepository.countByRestaurantId(restaurant.getId());
 
                 ReviewVector oldVector = restaurant.createReviewVector();

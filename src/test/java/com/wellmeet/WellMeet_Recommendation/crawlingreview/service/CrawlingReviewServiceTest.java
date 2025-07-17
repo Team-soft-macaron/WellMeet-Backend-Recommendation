@@ -9,7 +9,7 @@ import com.wellmeet.WellMeet_Recommendation.crawlingreview.dto.CrawlingReviewRes
 import com.wellmeet.WellMeet_Recommendation.crawlingreview.repository.CrawlingReviewRepository;
 import com.wellmeet.WellMeet_Recommendation.exception.ErrorCode;
 import com.wellmeet.WellMeet_Recommendation.exception.WellMeetException;
-import com.wellmeet.WellMeet_Recommendation.restaurant.domain.Restaurant;
+import com.wellmeet.WellMeet_Recommendation.restaurant.domain.RestaurantVector;
 import com.wellmeet.WellMeet_Recommendation.restaurant.repository.RestaurantRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -55,7 +55,7 @@ class CrawlingReviewServiceTest {
         when(request.getContent()).thenReturn(restaurantName);
         when(request.getHash()).thenReturn(hash);
 
-        Restaurant restaurant = mock(Restaurant.class);
+        RestaurantVector restaurant = mock(RestaurantVector.class);
         when(restaurant.createReviewVector())
                 .thenReturn(new ReviewVector(new float[Constant.OPENAI_EMBEDDING_DIMENSION],
                         new float[Constant.OPENAI_EMBEDDING_DIMENSION],

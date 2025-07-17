@@ -11,9 +11,9 @@ import org.hibernate.annotations.Type;
 
 @Getter
 @Entity
-@Table(name = "restaurant")
+@Table(name = "restaurant_vector")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Restaurant extends BaseEntity {
+public class RestaurantVector extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,7 +44,7 @@ public class Restaurant extends BaseEntity {
     @Column(name = "purpose_vector", columnDefinition = "vector(768)")
     private float[] purposeVector;
 
-    public Restaurant(String restaurantId, double latitude, double longitude, ReviewVector reviewVector) {
+    public RestaurantVector(String restaurantId, double latitude, double longitude, ReviewVector reviewVector) {
         this.restaurantId = restaurantId;
         this.latitude = latitude;
         this.longitude = longitude;

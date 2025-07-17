@@ -1,5 +1,5 @@
 -- 레스토랑 데이터 삽입
-INSERT INTO restaurant (restaurant_id, latitude, longitude)
+INSERT INTO restaurant_vector (restaurant_id, latitude, longitude)
 VALUES 
     ( 1, 37.5445, 126.9517),
     ( 2, 37.5451, 126.9513),

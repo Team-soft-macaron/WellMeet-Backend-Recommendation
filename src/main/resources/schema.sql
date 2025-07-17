@@ -8,7 +8,7 @@ RETURNS vector AS $$
 $$ LANGUAGE sql IMMUTABLE;
 
 -- Restaurant 테이블 생성
-CREATE TABLE IF NOT EXISTS restaurant (
+CREATE TABLE IF NOT EXISTS restaurant_vector (
     id BIGSERIAL PRIMARY KEY,
     restaurant_id VARCHAR(255) UNIQUE,
     latitude DOUBLE PRECISION NOT NULL,
@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS crawling_review (
     id BIGSERIAL PRIMARY KEY,
     content TEXT,
     hash VARCHAR(255),
-    restaurant_id BIGINT REFERENCES restaurant(id),
+    restaurant_id BIGINT REFERENCES restaurant_vector(id),
     vibe_vector vector(768) DEFAULT zero_vector(768),
     food_vector vector(768) DEFAULT zero_vector(768),
     companion_vector vector(768) DEFAULT zero_vector(768),

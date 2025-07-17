@@ -1,6 +1,6 @@
 package com.wellmeet.WellMeet_Recommendation.restaurant.dto;
 
-import com.wellmeet.WellMeet_Recommendation.restaurant.domain.Restaurant;
+import com.wellmeet.WellMeet_Recommendation.restaurant.domain.RestaurantVector;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -13,7 +13,7 @@ public class RestaurantResponse {
     private double longitude;
     private String restaurantId;
 
-    public RestaurantResponse(Restaurant restaurant) {
+    public RestaurantResponse(RestaurantVector restaurant) {
         this.id = restaurant.getId();
         this.latitude = restaurant.getLatitude();
         this.longitude = restaurant.getLongitude();

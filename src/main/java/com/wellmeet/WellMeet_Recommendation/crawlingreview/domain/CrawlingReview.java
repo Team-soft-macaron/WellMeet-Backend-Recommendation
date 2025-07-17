@@ -1,7 +1,7 @@
 package com.wellmeet.WellMeet_Recommendation.crawlingreview.domain;
 
 import com.wellmeet.WellMeet_Recommendation.common.domain.ReviewVector;
-import com.wellmeet.WellMeet_Recommendation.restaurant.domain.Restaurant;
+import com.wellmeet.WellMeet_Recommendation.restaurant.domain.RestaurantVector;
 import com.wellmeet.WellMeet_Recommendation.restaurant.domain.VectorType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -41,10 +41,10 @@ public class CrawlingReview {
     private float[] purposeVector;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id")
-    private Restaurant restaurant;
+    private RestaurantVector restaurant;
 
     public CrawlingReview(String content,
-            Restaurant restaurant,
+            RestaurantVector restaurant,
             String hash,
             ReviewVector reviewVector) {
         this.content = content;

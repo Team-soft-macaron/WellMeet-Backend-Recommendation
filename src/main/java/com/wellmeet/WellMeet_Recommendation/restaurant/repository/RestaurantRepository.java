@@ -1,6 +1,6 @@
 package com.wellmeet.WellMeet_Recommendation.restaurant.repository;
 
-import com.wellmeet.WellMeet_Recommendation.restaurant.domain.Restaurant;
+import com.wellmeet.WellMeet_Recommendation.restaurant.domain.RestaurantVector;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
+public interface RestaurantRepository extends JpaRepository<RestaurantVector, Long> {
 
     @Query(value = """
             WITH similarity_calc AS (
@@ -18,7 +18,7 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
                     r.food_vector <=> CAST(:foodVector AS vector) AS food_sim,
                     r.companion_vector <=> CAST(:companionVector AS vector) AS companion_sim,
                     r.purpose_vector <=> CAST(:purposeVector AS vector) AS purpose_sim
-                FROM restaurant r
+                FROM restaurant_vector r
             )
             SELECT
                 restaurant_id,
