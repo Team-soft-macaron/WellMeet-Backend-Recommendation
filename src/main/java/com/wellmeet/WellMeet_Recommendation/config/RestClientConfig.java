@@ -7,7 +7,6 @@ import java.time.Duration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestClient;
-import org.springframework.web.client.RestClientException;
 
 import lombok.extern.slf4j.Slf4j;
 
