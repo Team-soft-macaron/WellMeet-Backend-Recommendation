@@ -10,7 +10,7 @@ $$ LANGUAGE sql IMMUTABLE;
 -- Restaurant Vector 테이블 생성
 CREATE TABLE IF NOT EXISTS restaurant_vector (
     id BIGSERIAL PRIMARY KEY,
-    restaurant_id UUID UNIQUE,
+    restaurant_id VARCHAR(255) UNIQUE,
     place_id VARCHAR(255) UNIQUE,
     latitude DOUBLE PRECISION NOT NULL,
     longitude DOUBLE PRECISION NOT NULL,
