@@ -28,6 +28,7 @@ public class RestaurantVectorService {
         public RestaurantResponse saveRestaurant(RestaurantCreateRequest request) {
                 RestaurantVector restaurant = new RestaurantVector(
                                 request.getRestaurantId(),
+                                request.getPlaceId(),
                                 request.getLatitude(),
                                 request.getLongitude(),
                                 new ReviewVector(new float[Constant.OPENAI_EMBEDDING_DIMENSION],
