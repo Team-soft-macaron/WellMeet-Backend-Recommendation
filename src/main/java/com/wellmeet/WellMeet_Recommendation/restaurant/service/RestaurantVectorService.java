@@ -2,9 +2,12 @@ package com.wellmeet.WellMeet_Recommendation.restaurant.service;
 
 import com.wellmeet.WellMeet_Recommendation.common.constant.Constant;
 import com.wellmeet.WellMeet_Recommendation.common.domain.ReviewVector;
+import com.wellmeet.WellMeet_Recommendation.common.util.LLMUtil;
 import com.wellmeet.WellMeet_Recommendation.crawlingreview.service.ReviewVectorGenerator;
 import com.wellmeet.WellMeet_Recommendation.restaurant.client.RestaurantClient;
+import com.wellmeet.WellMeet_Recommendation.restaurant.domain.BoundingBox;
 import com.wellmeet.WellMeet_Recommendation.restaurant.domain.RestaurantVector;
+import com.wellmeet.WellMeet_Recommendation.restaurant.dto.KakaoCoordinateResponse;
 import com.wellmeet.WellMeet_Recommendation.restaurant.dto.RestaurantCreateRequest;
 import com.wellmeet.WellMeet_Recommendation.restaurant.dto.RestaurantDetailResponse;
 import com.wellmeet.WellMeet_Recommendation.restaurant.dto.RestaurantResponse;
@@ -24,6 +27,8 @@ public class RestaurantVectorService {
         private final RestaurantVectorRepository restaurantVectorRepository;
         private final ReviewVectorGenerator reviewVectorGenerator;
         private final RestaurantClient restaurantClient;
+        private final KakaoMapAPIService kakaoMapAPIService;
+        private final LLMUtil llmUtil;
 
         public RestaurantResponse saveRestaurant(RestaurantCreateRequest request) {
                 RestaurantVector restaurant = new RestaurantVector(
@@ -39,7 +44,19 @@ public class RestaurantVectorService {
                 return new RestaurantResponse(savedRestaurant);
         }
 
-        public List<RestaurantDetailResponse> recommendRestaurant(String query) {
+        public List<RestaurantDetailResponse> recommendRestaurants(String query) {
+                String location = llmUtil.extractLocation(query);
+                System.out.println("location: " + location);
+                if (location.isEmpty()) {
+                        System.out.println("location is empty");
+                        return recommendRestaurantWithoutBoundingBox(query);
+                } else {
+                        System.out.println("location is not empty");
+                        return recommendRestaurantWithBoundingBox(query, location);
+                }
+        }
+
+        private List<RestaurantDetailResponse> recommendRestaurantWithoutBoundingBox(String query) {
                 int TOP_RESTAURANT_COUNT = 5;
                 ReviewVector reviewVector = reviewVectorGenerator.generateFromContent(query);
 
@@ -55,4 +72,30 @@ public class RestaurantVectorService {
                                 .collect(Collectors.toList());
         }
 
+        private List<RestaurantDetailResponse> recommendRestaurantWithBoundingBox(String query, String location) {
+
+                KakaoCoordinateResponse kakaoCoordinateResponse = kakaoMapAPIService.getFirstPlaceCoordinate(location);
+                double longitude = Double.parseDouble(kakaoCoordinateResponse.getX());
+                double latitude = Double.parseDouble(kakaoCoordinateResponse.getY());
+                System.out.println("latitude: " + latitude);
+                System.out.println("longitude: " + longitude);
+                System.out.println("place name: " + kakaoCoordinateResponse.getPlaceName());
+                BoundingBox boundingBox = new BoundingBox(latitude, longitude);
+                int TOP_RESTAURANT_COUNT = 5;
+                ReviewVector reviewVector = reviewVectorGenerator.generateFromContent(query);
+                // 데이터베이스에서 직접 합산된 유사도로 정렬
+                List<String> topRestaurants = restaurantVectorRepository
+                                .findTopRestaurantIdsByCombinedSimilarityWithBoundingBox(
+                                                reviewVector.getVibeVector(),
+                                                reviewVector.getFoodVector(),
+                                                reviewVector.getCompanionVector(),
+                                                reviewVector.getPurposeVector(),
+                                                boundingBox,
+                                                TOP_RESTAURANT_COUNT);
+
+                topRestaurants.forEach(System.out::println);
+                return topRestaurants.stream().map(restaurantId -> restaurantClient
+                                .getRestaurantById(restaurantId))
+                                .collect(Collectors.toList());
+        }
 }
