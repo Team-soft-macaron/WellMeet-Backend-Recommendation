@@ -32,7 +32,7 @@ public interface RestaurantVectorRepository extends JpaRepository<RestaurantVect
             ORDER BY combined_similarity
             LIMIT :limit
             """, nativeQuery = true)
-    List<Long> findTopRestaurantIdsByCombinedSimilarity(
+    List<String> findTopRestaurantIdsByCombinedSimilarity(
             @Param("vibeVector") float[] vibeVector,
             @Param("foodVector") float[] foodVector,
             @Param("companionVector") float[] companionVector,

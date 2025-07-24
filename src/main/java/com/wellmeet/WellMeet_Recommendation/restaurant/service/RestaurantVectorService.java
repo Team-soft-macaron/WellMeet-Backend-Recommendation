@@ -44,7 +44,7 @@ public class RestaurantVectorService {
                 ReviewVector reviewVector = reviewVectorGenerator.generateFromContent(query);
 
                 // 데이터베이스에서 직접 합산된 유사도로 정렬
-                List<Long> topRestaurants = restaurantVectorRepository.findTopRestaurantIdsByCombinedSimilarity(
+                List<String> topRestaurants = restaurantVectorRepository.findTopRestaurantIdsByCombinedSimilarity(
                                 reviewVector.getVibeVector(),
                                 reviewVector.getFoodVector(),
                                 reviewVector.getCompanionVector(),

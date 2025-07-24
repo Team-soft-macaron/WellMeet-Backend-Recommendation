@@ -18,7 +18,7 @@ public class RestaurantClient {
         this.restaurantUrl = restaurantUrl;
     }
 
-    public RestaurantDetailResponse getRestaurantById(Long id) {
+    public RestaurantDetailResponse getRestaurantById(String id) {
         return restClient.get()
                 .uri(restaurantUrl + "/api/restaurant/{id}?memberId=1", id)
                 .retrieve()
