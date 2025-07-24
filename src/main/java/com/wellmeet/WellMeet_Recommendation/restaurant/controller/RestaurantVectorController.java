@@ -1,8 +1,10 @@
 package com.wellmeet.WellMeet_Recommendation.restaurant.controller;
 
+import com.wellmeet.WellMeet_Recommendation.restaurant.dto.KakaoCoordinateResponse;
 import com.wellmeet.WellMeet_Recommendation.restaurant.dto.RestaurantCreateRequest;
 import com.wellmeet.WellMeet_Recommendation.restaurant.dto.RestaurantDetailResponse;
 import com.wellmeet.WellMeet_Recommendation.restaurant.dto.RestaurantResponse;
+import com.wellmeet.WellMeet_Recommendation.restaurant.service.KakaoMapAPIService;
 import com.wellmeet.WellMeet_Recommendation.restaurant.service.RestaurantVectorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,6 +19,13 @@ import java.util.List;
 public class RestaurantVectorController {
 
     private final RestaurantVectorService restaurantVectorService;
+    private final KakaoMapAPIService kakaoMapAPIService;
+
+    @PostMapping("/api/restaurant/kakao")
+    @ResponseStatus(HttpStatus.OK)
+    public KakaoCoordinateResponse getFirstPlaceCoordinate(@RequestBody String query) {
+        return kakaoMapAPIService.getFirstPlaceCoordinate(query);
+    }
 
     @PostMapping("/api/restaurant")
     @ResponseStatus(HttpStatus.CREATED)
