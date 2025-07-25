@@ -33,165 +33,165 @@ import com.wellmeet.WellMeet_Recommendation.restaurant.service.RestaurantVectorS
 @ExtendWith(MockitoExtension.class)
 public class RestaurantVectorServiceTest {
 
-        @Mock
-        private RestaurantVectorRepository restaurantVectorRepository;
+    @Mock
+    private RestaurantVectorRepository restaurantVectorRepository;
 
-        @Mock
-        private ReviewVectorGenerator reviewVectorGenerator;
+    @Mock
+    private ReviewVectorGenerator reviewVectorGenerator;
 
-        @Mock
-        private RestaurantClient restaurantClient;
-        @Mock
-        private LLMUtil llmUtil;
-        @Mock
-        private KakaoMapAPIService kakaoMapAPIService;
+    @Mock
+    private RestaurantClient restaurantClient;
+    @Mock
+    private LLMUtil llmUtil;
+    @Mock
+    private KakaoMapAPIService kakaoMapAPIService;
 
-        @InjectMocks
-        private RestaurantVectorService restaurantVectorService;
+    @InjectMocks
+    private RestaurantVectorService restaurantVectorService;
 
-        @Test
-        @DisplayName("위치 정보가 없을 때 사용자 입력을 받아 추천 레스토랑 목록을 반환한다")
-        void recommendRestaurantsWithoutLocationSuccess() {
-                // given
-                String testQuery = "여자친구와 데이트하기 좋은 분위기 있는 파스타 맛집 추천해줘";
-                ReviewVector mockReviewVector = new ReviewVector(
-                                new float[Constant.OPENAI_EMBEDDING_DIMENSION],
-                                new float[Constant.OPENAI_EMBEDDING_DIMENSION],
-                                new float[Constant.OPENAI_EMBEDDING_DIMENSION],
-                                new float[Constant.OPENAI_EMBEDDING_DIMENSION]);
+    @Test
+    @DisplayName("위치 정보가 없을 때 사용자 입력을 받아 추천 레스토랑 목록을 반환한다")
+    void recommendRestaurantsWithoutLocationSuccess() {
+        // given
+        String testQuery = "여자친구와 데이트하기 좋은 분위기 있는 파스타 맛집 추천해줘";
+        ReviewVector mockReviewVector = new ReviewVector(
+                new float[Constant.OPENAI_EMBEDDING_DIMENSION],
+                new float[Constant.OPENAI_EMBEDDING_DIMENSION],
+                new float[Constant.OPENAI_EMBEDDING_DIMENSION],
+                new float[Constant.OPENAI_EMBEDDING_DIMENSION]);
 
-                when(llmUtil.extractLocation(testQuery)).thenReturn("");
+        when(llmUtil.extractLocation(testQuery)).thenReturn("");
 
-                List<RestaurantDetailResponse> mockRestaurants = Arrays.asList(
-                                new RestaurantDetailResponse("1", "1", "서울시 강남구", 3.7, 1, 35.9780, 126.9780, ""),
-                                new RestaurantDetailResponse("2", "2", "서울시 서초구", 4.1, 1, 34.9780, 126.9780, ""),
-                                new RestaurantDetailResponse("3", "3", "서울시 송파구", 5.0, 1, 37.9780, 126.9780, ""),
-                                new RestaurantDetailResponse("4", "4", "서울시 마포구", 1.1, 1, 36.9780, 126.9780, ""),
-                                new RestaurantDetailResponse("5", "5", "서울시 용산구", 2.1, 1, 38.9780, 126.9780, ""));
+        List<RestaurantDetailResponse> mockRestaurants = Arrays.asList(
+                new RestaurantDetailResponse("1", "1", "서울시 강남구", 3.7, 1, 35.9780, 126.9780, ""),
+                new RestaurantDetailResponse("2", "2", "서울시 서초구", 4.1, 1, 34.9780, 126.9780, ""),
+                new RestaurantDetailResponse("3", "3", "서울시 송파구", 5.0, 1, 37.9780, 126.9780, ""),
+                new RestaurantDetailResponse("4", "4", "서울시 마포구", 1.1, 1, 36.9780, 126.9780, ""),
+                new RestaurantDetailResponse("5", "5", "서울시 용산구", 2.1, 1, 38.9780, 126.9780, ""));
 
-                // when
-                for (int i = 0; i < mockRestaurants.size(); i++) {
-                        when(restaurantClient.getRestaurantById(mockRestaurants.get(i).getId()))
-                                        .thenReturn(mockRestaurants.get(i));
-                }
-                when(reviewVectorGenerator.generateFromContent(testQuery)).thenReturn(mockReviewVector);
-                when(restaurantVectorRepository.findTopRestaurantIdsByCombinedSimilarity(
-                                mockReviewVector.getVibeVector(),
-                                mockReviewVector.getFoodVector(),
-                                mockReviewVector.getCompanionVector(),
-                                mockReviewVector.getPurposeVector(),
-                                5))
-                                .thenReturn(mockRestaurants.stream().map(RestaurantDetailResponse::getId)
-                                                .collect(Collectors.toList()));
-                List<RestaurantDetailResponse> result = restaurantVectorService.recommendRestaurants(testQuery);
-
-                // then
-                assertNotNull(result);
-                assertEquals(5, result.size());
-                for (RestaurantDetailResponse response : result) {
-                        RestaurantDetailResponse expectedRestaurant = mockRestaurants.stream()
-                                        .filter(restaurant -> restaurant.getId().equals(response.getId()))
-                                        .findFirst()
-                                        .orElse(null);
-
-                        assertAll(
-                                        () -> assertEquals(expectedRestaurant.getId(), response.getId()),
-                                        () -> assertEquals(expectedRestaurant.getName(), response.getName()),
-                                        () -> assertEquals(expectedRestaurant.getAddress(), response.getAddress()),
-                                        () -> assertEquals(expectedRestaurant.getRating(), response.getRating(), 0.01),
-                                        () -> assertEquals(expectedRestaurant.getReviewCount(),
-                                                        response.getReviewCount()),
-                                        () -> assertEquals(expectedRestaurant.getLatitude(), response.getLatitude(),
-                                                        0.01),
-                                        () -> assertEquals(expectedRestaurant.getLongitude(), response.getLongitude(),
-                                                        0.01),
-                                        () -> assertEquals(expectedRestaurant.getThumbnail(), response.getThumbnail()));
-                }
-                verify(reviewVectorGenerator, times(1)).generateFromContent(testQuery);
-                verify(restaurantVectorRepository, times(1)).findTopRestaurantIdsByCombinedSimilarity(
-                                mockReviewVector.getVibeVector(),
-                                mockReviewVector.getFoodVector(),
-                                mockReviewVector.getCompanionVector(),
-                                mockReviewVector.getPurposeVector(),
-                                5);
-                verify(llmUtil, times(1)).extractLocation(testQuery);
-                verify(restaurantVectorRepository, times(0)).findTopRestaurantIdsByCombinedSimilarityWithBoundingBox(
-                                any(), any(), any(), any(), any(), anyInt());
+        // when
+        for (int i = 0; i < mockRestaurants.size(); i++) {
+            when(restaurantClient.getRestaurantById(mockRestaurants.get(i).getId()))
+                    .thenReturn(mockRestaurants.get(i));
         }
+        when(reviewVectorGenerator.generateFromContent(testQuery)).thenReturn(mockReviewVector);
+        when(restaurantVectorRepository.findTopRestaurantIdsByCombinedSimilarity(
+                mockReviewVector.getVibeVector(),
+                mockReviewVector.getFoodVector(),
+                mockReviewVector.getCompanionVector(),
+                mockReviewVector.getPurposeVector(),
+                5))
+                .thenReturn(mockRestaurants.stream().map(RestaurantDetailResponse::getId)
+                        .collect(Collectors.toList()));
+        List<RestaurantDetailResponse> result = restaurantVectorService.recommendRestaurants(testQuery);
 
-        @Test
-        @DisplayName("위치 정보가 있을 때 사용자 입력을 받아 추천 레스토랑 목록을 반환한다")
-        void recommendRestaurantsWithLocationSuccess() {
-                // given
-                String testQuery = "여자친구와 데이트하기 좋은 분위기 있는 파스타 맛집 추천해줘";
-                ReviewVector mockReviewVector = new ReviewVector(
-                                new float[Constant.OPENAI_EMBEDDING_DIMENSION],
-                                new float[Constant.OPENAI_EMBEDDING_DIMENSION],
-                                new float[Constant.OPENAI_EMBEDDING_DIMENSION],
-                                new float[Constant.OPENAI_EMBEDDING_DIMENSION]);
+        // then
+        assertNotNull(result);
+        assertEquals(5, result.size());
+        for (RestaurantDetailResponse response : result) {
+            RestaurantDetailResponse expectedRestaurant = mockRestaurants.stream()
+                    .filter(restaurant -> restaurant.getId().equals(response.getId()))
+                    .findFirst()
+                    .orElse(null);
 
-                when(llmUtil.extractLocation(testQuery)).thenReturn("서울시 강남구");
-                double latitude = 35.9780;
-                double longitude = 125.9780;
-                when(kakaoMapAPIService.getFirstPlaceCoordinate("서울시 강남구"))
-                                .thenReturn(new KakaoCoordinateResponse(longitude, latitude, "서울시 강남구"));
-
-                List<RestaurantDetailResponse> mockRestaurants = Arrays.asList(
-                                new RestaurantDetailResponse("1", "1", "서울시 강남구", 3.7, 1, 35.9780, 126.9780, ""),
-                                new RestaurantDetailResponse("2", "2", "서울시 서초구", 4.1, 1, 34.9780, 126.9780, ""),
-                                new RestaurantDetailResponse("3", "3", "서울시 송파구", 5.0, 1, 37.9780, 126.9780, ""),
-                                new RestaurantDetailResponse("4", "4", "서울시 마포구", 1.1, 1, 36.9780, 126.9780, ""),
-                                new RestaurantDetailResponse("5", "5", "서울시 용산구", 2.1, 1, 38.9780, 126.9780, ""));
-
-                // when
-                for (int i = 0; i < mockRestaurants.size(); i++) {
-                        when(restaurantClient.getRestaurantById(mockRestaurants.get(i).getId()))
-                                        .thenReturn(mockRestaurants.get(i));
-                }
-                when(reviewVectorGenerator.generateFromContent(testQuery)).thenReturn(mockReviewVector);
-                when(restaurantVectorRepository.findTopRestaurantIdsByCombinedSimilarityWithBoundingBox(
-                                mockReviewVector.getVibeVector(),
-                                mockReviewVector.getFoodVector(),
-                                mockReviewVector.getCompanionVector(),
-                                mockReviewVector.getPurposeVector(),
-                                new BoundingBox(latitude, longitude),
-                                5))
-                                .thenReturn(mockRestaurants.stream().map(RestaurantDetailResponse::getId)
-                                                .collect(Collectors.toList()));
-                List<RestaurantDetailResponse> result = restaurantVectorService.recommendRestaurants(testQuery);
-
-                // then
-                assertNotNull(result);
-                assertEquals(5, result.size());
-                for (RestaurantDetailResponse response : result) {
-                        RestaurantDetailResponse expectedRestaurant = mockRestaurants.stream()
-                                        .filter(restaurant -> restaurant.getId().equals(response.getId()))
-                                        .findFirst()
-                                        .orElse(null);
-
-                        assertAll(
-                                        () -> assertEquals(expectedRestaurant.getId(), response.getId()),
-                                        () -> assertEquals(expectedRestaurant.getName(), response.getName()),
-                                        () -> assertEquals(expectedRestaurant.getAddress(), response.getAddress()),
-                                        () -> assertEquals(expectedRestaurant.getRating(), response.getRating(), 0.01),
-                                        () -> assertEquals(expectedRestaurant.getReviewCount(),
-                                                        response.getReviewCount()),
-                                        () -> assertEquals(expectedRestaurant.getLatitude(), response.getLatitude(),
-                                                        0.01),
-                                        () -> assertEquals(expectedRestaurant.getLongitude(), response.getLongitude(),
-                                                        0.01),
-                                        () -> assertEquals(expectedRestaurant.getThumbnail(), response.getThumbnail()));
-                }
-                verify(reviewVectorGenerator, times(1)).generateFromContent(testQuery);
-                verify(restaurantVectorRepository, times(1)).findTopRestaurantIdsByCombinedSimilarityWithBoundingBox(
-                                mockReviewVector.getVibeVector(),
-                                mockReviewVector.getFoodVector(),
-                                mockReviewVector.getCompanionVector(),
-                                mockReviewVector.getPurposeVector(),
-                                new BoundingBox(latitude, longitude),
-                                5);
-                verify(llmUtil, times(1)).extractLocation(testQuery);
-                verify(restaurantVectorRepository, times(0)).findTopRestaurantIdsByCombinedSimilarity(
-                                any(), any(), any(), any(), anyInt());
+            assertAll(
+                    () -> assertEquals(expectedRestaurant.getId(), response.getId()),
+                    () -> assertEquals(expectedRestaurant.getName(), response.getName()),
+                    () -> assertEquals(expectedRestaurant.getAddress(), response.getAddress()),
+                    () -> assertEquals(expectedRestaurant.getRating(), response.getRating(), 0.01),
+                    () -> assertEquals(expectedRestaurant.getReviewCount(),
+                            response.getReviewCount()),
+                    () -> assertEquals(expectedRestaurant.getLatitude(), response.getLatitude(),
+                            0.01),
+                    () -> assertEquals(expectedRestaurant.getLongitude(), response.getLongitude(),
+                            0.01),
+                    () -> assertEquals(expectedRestaurant.getThumbnail(), response.getThumbnail()));
         }
+        verify(reviewVectorGenerator, times(1)).generateFromContent(testQuery);
+        verify(restaurantVectorRepository, times(1)).findTopRestaurantIdsByCombinedSimilarity(
+                mockReviewVector.getVibeVector(),
+                mockReviewVector.getFoodVector(),
+                mockReviewVector.getCompanionVector(),
+                mockReviewVector.getPurposeVector(),
+                5);
+        verify(llmUtil, times(1)).extractLocation(testQuery);
+        verify(restaurantVectorRepository, times(0)).findTopRestaurantIdsByCombinedSimilarityWithBoundingBox(
+                any(), any(), any(), any(), any(), anyInt());
+    }
+
+    @Test
+    @DisplayName("위치 정보가 있을 때 사용자 입력을 받아 추천 레스토랑 목록을 반환한다")
+    void recommendRestaurantsWithLocationSuccess() {
+        // given
+        String testQuery = "여자친구와 데이트하기 좋은 분위기 있는 파스타 맛집 추천해줘";
+        ReviewVector mockReviewVector = new ReviewVector(
+                new float[Constant.OPENAI_EMBEDDING_DIMENSION],
+                new float[Constant.OPENAI_EMBEDDING_DIMENSION],
+                new float[Constant.OPENAI_EMBEDDING_DIMENSION],
+                new float[Constant.OPENAI_EMBEDDING_DIMENSION]);
+
+        when(llmUtil.extractLocation(testQuery)).thenReturn("서울시 강남구");
+        double latitude = 35.9780;
+        double longitude = 125.9780;
+        when(kakaoMapAPIService.getFirstPlaceCoordinate("서울시 강남구"))
+                .thenReturn(new KakaoCoordinateResponse(longitude, latitude, "서울시 강남구"));
+
+        List<RestaurantDetailResponse> mockRestaurants = Arrays.asList(
+                new RestaurantDetailResponse("1", "1", "서울시 강남구", 3.7, 1, 35.9780, 126.9780, ""),
+                new RestaurantDetailResponse("2", "2", "서울시 서초구", 4.1, 1, 34.9780, 126.9780, ""),
+                new RestaurantDetailResponse("3", "3", "서울시 송파구", 5.0, 1, 37.9780, 126.9780, ""),
+                new RestaurantDetailResponse("4", "4", "서울시 마포구", 1.1, 1, 36.9780, 126.9780, ""),
+                new RestaurantDetailResponse("5", "5", "서울시 용산구", 2.1, 1, 38.9780, 126.9780, ""));
+
+        // when
+        for (int i = 0; i < mockRestaurants.size(); i++) {
+            when(restaurantClient.getRestaurantById(mockRestaurants.get(i).getId()))
+                    .thenReturn(mockRestaurants.get(i));
+        }
+        when(reviewVectorGenerator.generateFromContent(testQuery)).thenReturn(mockReviewVector);
+        when(restaurantVectorRepository.findTopRestaurantIdsByCombinedSimilarityWithBoundingBox(
+                mockReviewVector.getVibeVector(),
+                mockReviewVector.getFoodVector(),
+                mockReviewVector.getCompanionVector(),
+                mockReviewVector.getPurposeVector(),
+                new BoundingBox(latitude, longitude),
+                5))
+                .thenReturn(mockRestaurants.stream().map(RestaurantDetailResponse::getId)
+                        .collect(Collectors.toList()));
+        List<RestaurantDetailResponse> result = restaurantVectorService.recommendRestaurants(testQuery);
+
+        // then
+        assertNotNull(result);
+        assertEquals(5, result.size());
+        for (RestaurantDetailResponse response : result) {
+            RestaurantDetailResponse expectedRestaurant = mockRestaurants.stream()
+                    .filter(restaurant -> restaurant.getId().equals(response.getId()))
+                    .findFirst()
+                    .orElse(null);
+
+            assertAll(
+                    () -> assertEquals(expectedRestaurant.getId(), response.getId()),
+                    () -> assertEquals(expectedRestaurant.getName(), response.getName()),
+                    () -> assertEquals(expectedRestaurant.getAddress(), response.getAddress()),
+                    () -> assertEquals(expectedRestaurant.getRating(), response.getRating(), 0.01),
+                    () -> assertEquals(expectedRestaurant.getReviewCount(),
+                            response.getReviewCount()),
+                    () -> assertEquals(expectedRestaurant.getLatitude(), response.getLatitude(),
+                            0.01),
+                    () -> assertEquals(expectedRestaurant.getLongitude(), response.getLongitude(),
+                            0.01),
+                    () -> assertEquals(expectedRestaurant.getThumbnail(), response.getThumbnail()));
+        }
+        verify(reviewVectorGenerator, times(1)).generateFromContent(testQuery);
+        verify(restaurantVectorRepository, times(1)).findTopRestaurantIdsByCombinedSimilarityWithBoundingBox(
+                mockReviewVector.getVibeVector(),
+                mockReviewVector.getFoodVector(),
+                mockReviewVector.getCompanionVector(),
+                mockReviewVector.getPurposeVector(),
+                new BoundingBox(latitude, longitude),
+                5);
+        verify(llmUtil, times(1)).extractLocation(testQuery);
+        verify(restaurantVectorRepository, times(0)).findTopRestaurantIdsByCombinedSimilarity(
+                any(), any(), any(), any(), anyInt());
+    }
 }
