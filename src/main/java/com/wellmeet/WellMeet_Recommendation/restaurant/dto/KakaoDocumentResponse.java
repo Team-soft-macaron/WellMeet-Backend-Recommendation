@@ -25,6 +25,6 @@ public class KakaoDocumentResponse {
     private String placeUrl;
     @JsonProperty("road_address_name")
     private String roadAddressName;
-    private String x; // 경도
-    private String y; // 위도
+    private String x;
+    private String y;
 }

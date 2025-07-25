@@ -19,8 +19,8 @@ public class KakaoAPIConfig {
     private static final int READ_TIMEOUT_SECONDS = 10;
     private final String KAKAO_API_URL = "https://dapi.kakao.com";
 
-    @Bean
-    public RestClient kakaoRestClient(RestClient.Builder restClientBuilder,
+    @Bean("kakaoRestClient")
+    public RestClient restClient(RestClient.Builder restClientBuilder,
             @Value("${kakao.rest-api-key}") String kakaoRestApiKey) {
         SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
         requestFactory.setConnectTimeout(Duration.ofSeconds(CONNECTION_TIMEOUT_SECONDS));

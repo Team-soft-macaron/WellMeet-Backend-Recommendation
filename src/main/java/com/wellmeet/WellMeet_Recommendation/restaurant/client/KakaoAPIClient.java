@@ -6,13 +6,14 @@ import org.springframework.web.client.RestClient;
 import com.wellmeet.WellMeet_Recommendation.restaurant.dto.KakaoCoordinateResponse;
 import com.wellmeet.WellMeet_Recommendation.restaurant.dto.KakaoDocumentResponse;
 import com.wellmeet.WellMeet_Recommendation.restaurant.dto.KakaoKeywordSearchResponse;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 @Component
 public class KakaoAPIClient {
     private final RestClient kakaoRestClient;
     private final String KEYWORD_SEARCH_URL = "/v2/local/search/keyword.json";
 
-    public KakaoAPIClient(RestClient kakaoRestClient) {
+    public KakaoAPIClient(@Qualifier("kakaoRestClient") RestClient kakaoRestClient) {
         this.kakaoRestClient = kakaoRestClient;
     }
 

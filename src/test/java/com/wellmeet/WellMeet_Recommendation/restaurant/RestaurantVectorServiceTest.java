@@ -18,10 +18,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import com.wellmeet.WellMeet_Recommendation.common.constant.Constant;
 import com.wellmeet.WellMeet_Recommendation.common.domain.ReviewVector;
+import com.wellmeet.WellMeet_Recommendation.common.util.LLMUtil;
 import com.wellmeet.WellMeet_Recommendation.crawlingreview.service.ReviewVectorGenerator;
 import com.wellmeet.WellMeet_Recommendation.restaurant.client.RestaurantClient;
 import com.wellmeet.WellMeet_Recommendation.restaurant.dto.RestaurantDetailResponse;
 import com.wellmeet.WellMeet_Recommendation.restaurant.repository.RestaurantVectorRepository;
+import com.wellmeet.WellMeet_Recommendation.restaurant.service.KakaoMapAPIService;
 import com.wellmeet.WellMeet_Recommendation.restaurant.service.RestaurantVectorService;
 
 @ExtendWith(MockitoExtension.class)
@@ -35,6 +37,10 @@ public class RestaurantVectorServiceTest {
 
         @Mock
         private RestaurantClient restaurantClient;
+        @Mock
+        private LLMUtil llmUtil;
+        @Mock
+        private KakaoMapAPIService kakaoMapAPIService;
 
         @InjectMocks
         private RestaurantVectorService restaurantVectorService;
@@ -51,11 +57,11 @@ public class RestaurantVectorServiceTest {
                                 new float[Constant.OPENAI_EMBEDDING_DIMENSION]);
 
                 List<RestaurantDetailResponse> mockRestaurants = Arrays.asList(
-                                new RestaurantDetailResponse(1L, "1", "서울시 강남구", 3.7, 1, 35.9780, 126.9780, ""),
-                                new RestaurantDetailResponse(2L, "2", "서울시 서초구", 4.1, 1, 34.9780, 126.9780, ""),
-                                new RestaurantDetailResponse(3L, "3", "서울시 송파구", 5.0, 1, 37.9780, 126.9780, ""),
-                                new RestaurantDetailResponse(4L, "4", "서울시 마포구", 1.1, 1, 36.9780, 126.9780, ""),
-                                new RestaurantDetailResponse(5L, "5", "서울시 용산구", 2.1, 1, 38.9780, 126.9780, ""));
+                                new RestaurantDetailResponse("1", "1", "서울시 강남구", 3.7, 1, 35.9780, 126.9780, ""),
+                                new RestaurantDetailResponse("2", "2", "서울시 서초구", 4.1, 1, 34.9780, 126.9780, ""),
+                                new RestaurantDetailResponse("3", "3", "서울시 송파구", 5.0, 1, 37.9780, 126.9780, ""),
+                                new RestaurantDetailResponse("4", "4", "서울시 마포구", 1.1, 1, 36.9780, 126.9780, ""),
+                                new RestaurantDetailResponse("5", "5", "서울시 용산구", 2.1, 1, 38.9780, 126.9780, ""));
                 // when
                 for (int i = 0; i < mockRestaurants.size(); i++) {
                         when(restaurantClient.getRestaurantById(mockRestaurants.get(i).getId()))
@@ -70,7 +76,7 @@ public class RestaurantVectorServiceTest {
                                 5))
                                 .thenReturn(mockRestaurants.stream().map(RestaurantDetailResponse::getId)
                                                 .collect(Collectors.toList()));
-                List<RestaurantDetailResponse> result = restaurantVectorService.recommendRestaurant(testQuery);
+                List<RestaurantDetailResponse> result = restaurantVectorService.recommendRestaurants(testQuery);
 
                 // then
                 assertNotNull(result);
