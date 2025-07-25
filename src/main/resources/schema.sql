@@ -11,6 +11,7 @@ $$ LANGUAGE sql IMMUTABLE;
 CREATE TABLE IF NOT EXISTS restaurant_vector (
     id BIGSERIAL PRIMARY KEY,
     restaurant_id VARCHAR(255) UNIQUE,
+    place_id VARCHAR(255) UNIQUE,
     latitude DOUBLE PRECISION NOT NULL,
     longitude DOUBLE PRECISION NOT NULL,
     vibe_vector vector(768) DEFAULT zero_vector(768),

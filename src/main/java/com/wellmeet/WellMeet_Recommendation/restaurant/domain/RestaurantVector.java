@@ -22,6 +22,9 @@ public class RestaurantVector extends BaseEntity {
     @Column(unique = true)
     private String restaurantId;
 
+    @Column(unique = true)
+    private String placeId;
+
     @Column(nullable = false)
     private double latitude;
 
@@ -44,8 +47,10 @@ public class RestaurantVector extends BaseEntity {
     @Column(name = "purpose_vector", columnDefinition = "vector(768)")
     private float[] purposeVector;
 
-    public RestaurantVector(String restaurantId, double latitude, double longitude, ReviewVector reviewVector) {
+    public RestaurantVector(String restaurantId, String placeId, double latitude, double longitude,
+            ReviewVector reviewVector) {
         this.restaurantId = restaurantId;
+        this.placeId = placeId;
         this.latitude = latitude;
         this.longitude = longitude;
         this.vibeVector = reviewVector.getVibeVector();
