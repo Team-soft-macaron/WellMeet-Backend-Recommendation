@@ -75,8 +75,8 @@ public class RestaurantVectorService {
         private List<RestaurantDetailResponse> recommendRestaurantWithBoundingBox(String query, String location) {
 
                 KakaoCoordinateResponse kakaoCoordinateResponse = kakaoMapAPIService.getFirstPlaceCoordinate(location);
-                double longitude = Double.parseDouble(kakaoCoordinateResponse.getX());
-                double latitude = Double.parseDouble(kakaoCoordinateResponse.getY());
+                double longitude = kakaoCoordinateResponse.getX();
+                double latitude = kakaoCoordinateResponse.getY();
                 System.out.println("latitude: " + latitude);
                 System.out.println("longitude: " + longitude);
                 System.out.println("place name: " + kakaoCoordinateResponse.getPlaceName());

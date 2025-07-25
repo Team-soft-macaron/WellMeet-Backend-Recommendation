@@ -6,11 +6,11 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class KakaoCoordinateResponse {
-    private String x;
-    private String y;
+    private double x;
+    private double y;
     private String placeName;
 
-    public KakaoCoordinateResponse(String x, String y, String placeName) {
+    public KakaoCoordinateResponse(double x, double y, String placeName) {
         this.x = x;
         this.y = y;
         this.placeName = placeName;

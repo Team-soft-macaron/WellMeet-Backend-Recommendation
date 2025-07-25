@@ -29,7 +29,8 @@ public class KakaoAPIClient {
                 .retrieve()
                 .body(KakaoKeywordSearchResponse.class);
         KakaoDocumentResponse document = response.getDocuments().get(0);
-        return new KakaoCoordinateResponse(document.getX(), document.getY(), document.getPlaceName());
+        return new KakaoCoordinateResponse(Double.parseDouble(document.getX()), Double.parseDouble(document.getY()),
+                document.getPlaceName());
 
     }
 }
