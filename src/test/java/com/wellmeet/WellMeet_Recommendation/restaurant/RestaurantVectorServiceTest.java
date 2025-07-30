@@ -73,7 +73,7 @@ public class RestaurantVectorServiceTest {
         String location = "강남역";
         ReviewVector mockReviewVector = createMockReviewVector();
         List<RestaurantDetailResponse> mockRestaurants = createMockRestaurants();
-        KakaoCoordinateResponse mockCoordinate = new KakaoCoordinateResponse(37.4979, 127.0276, "강남역");
+        KakaoCoordinateResponse mockCoordinate = createMockCoordinate();
 
         setupMockLocationExists(testQuery, location, mockReviewVector, mockRestaurants, mockCoordinate);
 
@@ -98,6 +98,10 @@ public class RestaurantVectorServiceTest {
                 new RestaurantDetailResponse("3", "레스토랑3", "서울시 송파구", 5.0, 1, 37.9780, 126.9780, ""),
                 new RestaurantDetailResponse("4", "레스토랑4", "서울시 마포구", 1.1, 1, 36.9780, 126.9780, ""),
                 new RestaurantDetailResponse("5", "레스토랑5", "서울시 용산구", 2.1, 1, 38.9780, 126.9780, ""));
+    }
+
+    private KakaoCoordinateResponse createMockCoordinate() {
+        return new KakaoCoordinateResponse(127.0276, 37.4979, "강남역");
     }
 
     private void setupMockLocationEmpty(String query, ReviewVector reviewVector,
