@@ -46,28 +46,24 @@ public class RestaurantVectorService {
     }
 
     public List<RestaurantDetailResponse> recommendRestaurants(String query) {
+
         String location = llmUtil.extractLocation(query);
-        System.out.println("location: " + location);
         if (location.isEmpty()) {
-            System.out.println("location is empty");
             return recommendRestaurantWithoutBoundingBox(query);
         } else {
-            System.out.println("location is not empty");
             return recommendRestaurantWithBoundingBox(query, location);
         }
     }
 
     private List<RestaurantDetailResponse> recommendRestaurantWithoutBoundingBox(String query) {
-        int TOP_RESTAURANT_COUNT = 5;
         ReviewVector reviewVector = reviewVectorGenerator.generateFromContent(query);
 
-        // 데이터베이스에서 직접 합산된 유사도로 정렬
         List<String> topRestaurants = restaurantVectorRepository.findTopRestaurantIdsByCombinedSimilarity(
                 reviewVector.getVibeVector(),
                 reviewVector.getFoodVector(),
                 reviewVector.getCompanionVector(),
                 reviewVector.getPurposeVector(),
-                TOP_RESTAURANT_COUNT);
+                5);
         return topRestaurants.stream().map(restaurantId -> restaurantClient
                 .getRestaurantById(restaurantId))
                 .collect(Collectors.toList());
@@ -76,15 +72,9 @@ public class RestaurantVectorService {
     private List<RestaurantDetailResponse> recommendRestaurantWithBoundingBox(String query, String location) {
 
         KakaoCoordinateResponse kakaoCoordinateResponse = kakaoMapAPIService.getFirstPlaceCoordinate(location);
-        double longitude = kakaoCoordinateResponse.getX();
-        double latitude = kakaoCoordinateResponse.getY();
-        System.out.println("latitude: " + latitude);
-        System.out.println("longitude: " + longitude);
-        System.out.println("place name: " + kakaoCoordinateResponse.getPlaceName());
-        BoundingBox boundingBox = new BoundingBox(latitude, longitude);
-        int TOP_RESTAURANT_COUNT = 5;
+        BoundingBox boundingBox = new BoundingBox(kakaoCoordinateResponse.getY(), kakaoCoordinateResponse.getX());
         ReviewVector reviewVector = reviewVectorGenerator.generateFromContent(query);
-        // 데이터베이스에서 직접 합산된 유사도로 정렬
+
         List<String> topRestaurants = restaurantVectorRepository
                 .findTopRestaurantIdsByCombinedSimilarityWithBoundingBox(
                         reviewVector.getVibeVector(),
@@ -92,9 +82,8 @@ public class RestaurantVectorService {
                         reviewVector.getCompanionVector(),
                         reviewVector.getPurposeVector(),
                         boundingBox,
-                        TOP_RESTAURANT_COUNT);
+                        5);
 
-        topRestaurants.forEach(System.out::println);
         return topRestaurants.stream().map(restaurantId -> restaurantClient
                 .getRestaurantById(restaurantId))
                 .collect(Collectors.toList());

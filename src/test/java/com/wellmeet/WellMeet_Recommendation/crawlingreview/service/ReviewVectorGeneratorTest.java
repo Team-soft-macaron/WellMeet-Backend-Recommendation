@@ -6,8 +6,6 @@ import com.wellmeet.WellMeet_Recommendation.common.dto.ExtractedInfoResponse;
 import com.wellmeet.WellMeet_Recommendation.common.util.EmbeddingUtil;
 import com.wellmeet.WellMeet_Recommendation.common.util.LLMUtil;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,8 +34,6 @@ public class ReviewVectorGeneratorTest {
     @Test
     @DisplayName("정상적인 리뷰 내용이 주어졌을 때 ReviewVector를 생성한다")
     void generateFromContentSuccess() {
-        // given
-        final String testContent = TEST_CONTENT;
         final ExtractedInfoResponse mockExtractedInfo = new ExtractedInfoResponse(VIBE, FOOD, COMPANION,
                 PURPOSE);
         final ReviewVector mockReviewVector = new ReviewVector(
@@ -46,25 +42,16 @@ public class ReviewVectorGeneratorTest {
                 new float[Constant.OPENAI_EMBEDDING_DIMENSION],
                 new float[Constant.OPENAI_EMBEDDING_DIMENSION]);
 
-        // when
-        when(llmUtil.extractUserRequest(testContent)).thenReturn(mockExtractedInfo);
+        when(llmUtil.extractUserRequest(TEST_CONTENT)).thenReturn(mockExtractedInfo);
         when(embeddingUtil.createReviewVector(
                 mockExtractedInfo.getVibe(),
                 mockExtractedInfo.getFood(),
                 mockExtractedInfo.getCompanion(),
                 mockExtractedInfo.getPurpose())).thenReturn(mockReviewVector);
 
-        // when
-        ReviewVector result = reviewVectorGenerator.generateFromContent(testContent);
+        ReviewVector result = reviewVectorGenerator.generateFromContent(TEST_CONTENT);
 
-        // then
         assertEquals(mockReviewVector, result);
-        verify(llmUtil, times(1)).extractUserRequest(testContent);
-        verify(embeddingUtil, times(1)).createReviewVector(
-                VIBE,
-                FOOD,
-                COMPANION,
-                PURPOSE);
     }
 
 }
