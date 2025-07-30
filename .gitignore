@@ -39,3 +39,4 @@ out/
 /src/main/resources/application.yml
 vertex_ai_key.json
 .env
+.DS_Store
