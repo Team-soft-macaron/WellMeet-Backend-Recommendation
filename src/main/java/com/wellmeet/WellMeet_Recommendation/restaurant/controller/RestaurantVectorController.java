@@ -27,6 +27,6 @@ public class RestaurantVectorController {
     @PostMapping("/api/restaurants/recommend")
     @ResponseStatus(HttpStatus.OK)
     public List<RestaurantDetailResponse> recommendRestaurants(@RequestBody String query) {
-        return restaurantVectorService.recommendRestaurant(query);
+        return restaurantVectorService.recommendRestaurants(query);
     }
 }

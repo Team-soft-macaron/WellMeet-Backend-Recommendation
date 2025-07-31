@@ -2,9 +2,12 @@ package com.wellmeet.WellMeet_Recommendation.restaurant.domain;
 
 import com.wellmeet.WellMeet_Recommendation.exception.ErrorCode;
 import com.wellmeet.WellMeet_Recommendation.exception.WellMeetException;
+
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Getter
+@EqualsAndHashCode
 public class BoundingBox {
 
     private static final double RADIUS = 5.0;

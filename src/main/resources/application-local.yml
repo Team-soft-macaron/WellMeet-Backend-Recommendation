@@ -34,3 +34,5 @@ spring:
 services:
   restaurant:
     url: http://host.docker.internal:8080
+kakao:
+  rest-api-key: ${KAKAO_REST_API_KEY}  

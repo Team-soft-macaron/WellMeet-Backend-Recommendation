@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class RestaurantDetailResponse {
-    private Long id;
+    private String id;
     private String name;
     private String address;
     private double rating;
@@ -15,7 +15,7 @@ public class RestaurantDetailResponse {
     private double longitude;
     private String thumbnail;
 
-    public RestaurantDetailResponse(Long id, String name, String address, double rating, int reviewCount,
+    public RestaurantDetailResponse(String id, String name, String address, double rating, int reviewCount,
             double latitude, double longitude, String thumbnail) {
         this.id = id;
         this.name = name;

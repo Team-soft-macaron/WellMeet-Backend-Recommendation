@@ -51,4 +51,26 @@ public class LLMUtil {
         return outputConverter.convert(content);
     }
 
+    public String extractLocation(String userRequest) {
+        final String systemPrompt = """
+                당신은 한국어 모임 요청을 분석하는 전문가입니다.
+                사용자의 요청을 분석하여 위치 정보만 추출해주세요.
+
+                규칙:
+                - 위치가 있으면 해당 위치만 반환 (예: 홍대, 서울, 제주도, 공덕, 강남역, 대구)
+                - 위치가 없으면 아무것도 반환하지 마세요
+                - JSON이나 다른 형식 없이 위치 텍스트만 반환하세요
+                - 절대 다른 설명이나 문장을 포함하지 마세요
+                """;
+
+        final Prompt prompt = new Prompt(List.of(
+                new SystemMessage(systemPrompt),
+                new UserMessage("다음 요청을 분석해주세요: " + userRequest)));
+
+        ChatResponse response = chatModel.call(prompt);
+        String location = response.getResult().getOutput().getText().trim();
+        log.info("Extracted location: {}", location);
+        return location;
+    }
+
 }

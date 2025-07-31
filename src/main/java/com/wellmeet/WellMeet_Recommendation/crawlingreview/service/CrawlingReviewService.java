@@ -16,36 +16,36 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CrawlingReviewService {
 
-        private final CrawlingReviewRepository crawlingReviewRepository;
-        private final RestaurantVectorRepository restaurantVectorRepository;
-        private final ReviewVectorGenerator reviewVectorGenerator;
+    private final CrawlingReviewRepository crawlingReviewRepository;
+    private final RestaurantVectorRepository restaurantVectorRepository;
+    private final ReviewVectorGenerator reviewVectorGenerator;
 
-        public CrawlingReviewResponse saveReview(CrawlingReviewSaveRequest request) {
-                RestaurantVector restaurant = restaurantVectorRepository.findById(request.getRestaurantId())
-                                .orElseThrow(() -> new WellMeetException(ErrorCode.RESTAURANT_NOT_FOUND));
+    public CrawlingReviewResponse saveReview(CrawlingReviewSaveRequest request) {
+        RestaurantVector restaurant = restaurantVectorRepository.findById(request.getRestaurantId())
+                .orElseThrow(() -> new WellMeetException(ErrorCode.RESTAURANT_NOT_FOUND));
 
-                ReviewVector reviewVector = reviewVectorGenerator.generateFromContent(request.getContent());
+        ReviewVector reviewVector = reviewVectorGenerator.generateFromContent(request.getContent());
 
-                CrawlingReview review = new CrawlingReview(
-                                request.getContent(),
-                                restaurant,
-                                request.getHash(),
-                                reviewVector);
+        CrawlingReview review = new CrawlingReview(
+                request.getContent(),
+                restaurant,
+                request.getHash(),
+                reviewVector);
 
-                CrawlingReview savedCrawlingReview = crawlingReviewRepository.save(review);
+        CrawlingReview savedCrawlingReview = crawlingReviewRepository.save(review);
 
-                updateRestaurantVectorsIncremental(restaurant, reviewVector);
+        updateRestaurantVectorsIncremental(restaurant, reviewVector);
 
-                return new CrawlingReviewResponse(savedCrawlingReview);
-        }
+        return new CrawlingReviewResponse(savedCrawlingReview);
+    }
 
-        private void updateRestaurantVectorsIncremental(RestaurantVector restaurant, ReviewVector newVector) {
-                long reviewCount = crawlingReviewRepository.countByRestaurantId(restaurant.getId());
+    private void updateRestaurantVectorsIncremental(RestaurantVector restaurant, ReviewVector newVector) {
+        long reviewCount = crawlingReviewRepository.countByRestaurantId(restaurant.getId());
 
-                ReviewVector oldVector = restaurant.createReviewVector();
-                ReviewVector updatedVector = oldVector.calculateIncrementalAverage(newVector, reviewCount);
-                restaurant.updateVectors(updatedVector);
+        ReviewVector oldVector = restaurant.createReviewVector();
+        ReviewVector updatedVector = oldVector.calculateIncrementalAverage(newVector, reviewCount);
+        restaurant.updateVectors(updatedVector);
 
-                restaurantVectorRepository.save(restaurant);
-        }
+        restaurantVectorRepository.save(restaurant);
+    }
 }
