@@ -62,8 +62,6 @@ public class RestaurantVectorServiceTest {
 
         List<RestaurantDetailResponse> result = restaurantVectorService.recommendRestaurants(testQuery);
 
-        // then
-        assertNotNull(result);
         assertEquals(5, result.size());
 
         for (RestaurantDetailResponse response : result) {
