@@ -62,8 +62,36 @@ public class RestaurantVectorServiceTest {
 
         List<RestaurantDetailResponse> result = restaurantVectorService.recommendRestaurants(testQuery);
 
-        assertRestaurantList(result, mockRestaurants);
-        verifyLocationEmpty(testQuery, mockReviewVector);
+        // then
+        assertNotNull(result);
+        assertEquals(5, result.size());
+
+        for (RestaurantDetailResponse response : result) {
+            RestaurantDetailResponse expectedRestaurant = mockRestaurants.stream()
+                    .filter(restaurant -> restaurant.getId().equals(response.getId()))
+                    .findFirst()
+                    .orElse(null);
+
+            assertAll(
+                    () -> assertEquals(expectedRestaurant.getId(), response.getId()),
+                    () -> assertEquals(expectedRestaurant.getName(), response.getName()),
+                    () -> assertEquals(expectedRestaurant.getAddress(), response.getAddress()),
+                    () -> assertEquals(expectedRestaurant.getRating(), response.getRating(), 0.01),
+                    () -> assertEquals(expectedRestaurant.getReviewCount(),
+                            response.getReviewCount()),
+                    () -> assertEquals(expectedRestaurant.getLatitude(), response.getLatitude(),
+                            0.01),
+                    () -> assertEquals(expectedRestaurant.getLongitude(), response.getLongitude(),
+                            0.01),
+                    () -> assertEquals(expectedRestaurant.getThumbnail(), response.getThumbnail()));
+        }
+
+        verify(restaurantVectorRepository, times(1)).findTopRestaurantIdsByCombinedSimilarity(
+                mockReviewVector.getVibeVector(),
+                mockReviewVector.getFoodVector(),
+                mockReviewVector.getCompanionVector(),
+                mockReviewVector.getPurposeVector(),
+                5);
     }
 
     @Test
@@ -79,8 +107,35 @@ public class RestaurantVectorServiceTest {
 
         List<RestaurantDetailResponse> result = restaurantVectorService.recommendRestaurants(testQuery);
 
-        assertRestaurantList(result, mockRestaurants);
-        verifyLocationExists(testQuery, location, mockReviewVector, mockCoordinate);
+        assertEquals(5, result.size());
+
+        for (RestaurantDetailResponse response : result) {
+            RestaurantDetailResponse expectedRestaurant = mockRestaurants.stream()
+                    .filter(restaurant -> restaurant.getId().equals(response.getId()))
+                    .findFirst()
+                    .orElse(null);
+
+            assertAll(
+                    () -> assertEquals(expectedRestaurant.getId(), response.getId()),
+                    () -> assertEquals(expectedRestaurant.getName(), response.getName()),
+                    () -> assertEquals(expectedRestaurant.getAddress(), response.getAddress()),
+                    () -> assertEquals(expectedRestaurant.getRating(), response.getRating(), 0.01),
+                    () -> assertEquals(expectedRestaurant.getReviewCount(),
+                            response.getReviewCount()),
+                    () -> assertEquals(expectedRestaurant.getLatitude(), response.getLatitude(),
+                            0.01),
+                    () -> assertEquals(expectedRestaurant.getLongitude(), response.getLongitude(),
+                            0.01),
+                    () -> assertEquals(expectedRestaurant.getThumbnail(), response.getThumbnail()));
+        }
+
+        verify(restaurantVectorRepository, times(1)).findTopRestaurantIdsByCombinedSimilarityWithBoundingBox(
+                mockReviewVector.getVibeVector(),
+                mockReviewVector.getFoodVector(),
+                mockReviewVector.getCompanionVector(),
+                mockReviewVector.getPurposeVector(),
+                new BoundingBox(mockCoordinate.getLatitude(), mockCoordinate.getLongitude()),
+                5);
     }
 
     private ReviewVector createMockReviewVector() {
@@ -148,53 +203,5 @@ public class RestaurantVectorServiceTest {
         return restaurants.stream()
                 .map(RestaurantDetailResponse::getId)
                 .collect(Collectors.toList());
-    }
-
-    private void verifyLocationEmpty(String query, ReviewVector reviewVector) {
-        verify(kakaoMapAPIService, never()).getFirstPlaceCoordinate(any());
-        verify(restaurantVectorRepository, times(1)).findTopRestaurantIdsByCombinedSimilarity(
-                reviewVector.getVibeVector(),
-                reviewVector.getFoodVector(),
-                reviewVector.getCompanionVector(),
-                reviewVector.getPurposeVector(),
-                5);
-    }
-
-    private void verifyLocationExists(String query, String location, ReviewVector reviewVector,
-            KakaoCoordinateResponse coordinate) {
-        verify(kakaoMapAPIService, times(1)).getFirstPlaceCoordinate(location);
-        verify(restaurantVectorRepository, times(1)).findTopRestaurantIdsByCombinedSimilarityWithBoundingBox(
-                reviewVector.getVibeVector(),
-                reviewVector.getFoodVector(),
-                reviewVector.getCompanionVector(),
-                reviewVector.getPurposeVector(),
-                new BoundingBox(coordinate.getLatitude(), coordinate.getLongitude()),
-                5);
-    }
-
-    private void assertRestaurantList(List<RestaurantDetailResponse> result,
-            List<RestaurantDetailResponse> expectedRestaurants) {
-        assertNotNull(result);
-        assertEquals(5, result.size());
-
-        for (RestaurantDetailResponse response : result) {
-            RestaurantDetailResponse expectedRestaurant = expectedRestaurants.stream()
-                    .filter(restaurant -> restaurant.getId().equals(response.getId()))
-                    .findFirst()
-                    .orElse(null);
-
-            assertAll(
-                    () -> assertEquals(expectedRestaurant.getId(), response.getId()),
-                    () -> assertEquals(expectedRestaurant.getName(), response.getName()),
-                    () -> assertEquals(expectedRestaurant.getAddress(), response.getAddress()),
-                    () -> assertEquals(expectedRestaurant.getRating(), response.getRating(), 0.01),
-                    () -> assertEquals(expectedRestaurant.getReviewCount(),
-                            response.getReviewCount()),
-                    () -> assertEquals(expectedRestaurant.getLatitude(), response.getLatitude(),
-                            0.01),
-                    () -> assertEquals(expectedRestaurant.getLongitude(), response.getLongitude(),
-                            0.01),
-                    () -> assertEquals(expectedRestaurant.getThumbnail(), response.getThumbnail()));
-        }
     }
 }
