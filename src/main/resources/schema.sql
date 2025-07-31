@@ -7,7 +7,7 @@ RETURNS vector AS $$
     SELECT array_fill(0::float4, ARRAY[dim])::vector
 $$ LANGUAGE sql IMMUTABLE;
 
--- Restaurant 테이블 생성
+-- Restaurant Vector 테이블 생성
 CREATE TABLE IF NOT EXISTS restaurant_vector (
     id BIGSERIAL PRIMARY KEY,
     restaurant_id VARCHAR(255) UNIQUE,
@@ -19,14 +19,14 @@ CREATE TABLE IF NOT EXISTS restaurant_vector (
     companion_vector vector(768) DEFAULT zero_vector(768),
     purpose_vector vector(768) DEFAULT zero_vector(768),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    modified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    modified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
 -- CrawlingReview 테이블 생성
 CREATE TABLE IF NOT EXISTS crawling_review (
     id BIGSERIAL PRIMARY KEY,
     content TEXT,
-    hash VARCHAR(255),
+    hash VARCHAR(255) UNIQUE,
     restaurant_id BIGINT REFERENCES restaurant_vector(id),
     vibe_vector vector(768) DEFAULT zero_vector(768),
     food_vector vector(768) DEFAULT zero_vector(768),

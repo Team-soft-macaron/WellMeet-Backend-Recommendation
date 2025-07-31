@@ -19,6 +19,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -62,7 +63,7 @@ class CrawlingReviewServiceTest {
                         new float[Constant.OPENAI_EMBEDDING_DIMENSION],
                         new float[Constant.OPENAI_EMBEDDING_DIMENSION]));
         when(restaurant.getId()).thenReturn(1L);
-        when(restaurant.getRestaurantId()).thenReturn(restaurantName);
+        when(restaurant.getRestaurantId()).thenReturn(UUID.randomUUID().toString());
         when(restaurantVectorRepository.findById(1L)).thenReturn(Optional.of(restaurant));
 
         ReviewVector reviewVector = mock(ReviewVector.class);
