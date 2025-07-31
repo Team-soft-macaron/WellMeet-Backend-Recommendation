@@ -72,7 +72,8 @@ public class RestaurantVectorService {
     private List<RestaurantDetailResponse> recommendRestaurantWithBoundingBox(String query, String location) {
 
         KakaoCoordinateResponse kakaoCoordinateResponse = kakaoMapAPIService.getFirstPlaceCoordinate(location);
-        BoundingBox boundingBox = new BoundingBox(kakaoCoordinateResponse.getY(), kakaoCoordinateResponse.getX());
+        BoundingBox boundingBox = new BoundingBox(kakaoCoordinateResponse.getLatitude(),
+                kakaoCoordinateResponse.getLongitude());
         ReviewVector reviewVector = reviewVectorGenerator.generateFromContent(query);
 
         List<String> topRestaurants = restaurantVectorRepository

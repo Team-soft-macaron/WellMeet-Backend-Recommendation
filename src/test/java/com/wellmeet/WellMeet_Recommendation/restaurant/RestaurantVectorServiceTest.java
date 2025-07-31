@@ -130,7 +130,7 @@ public class RestaurantVectorServiceTest {
                 reviewVector.getFoodVector(),
                 reviewVector.getCompanionVector(),
                 reviewVector.getPurposeVector(),
-                new BoundingBox(coordinate.getY(), coordinate.getX()),
+                new BoundingBox(coordinate.getLatitude(), coordinate.getLongitude()),
                 5))
                 .thenReturn(extractRestaurantIds(restaurants));
 
@@ -168,7 +168,7 @@ public class RestaurantVectorServiceTest {
                 reviewVector.getFoodVector(),
                 reviewVector.getCompanionVector(),
                 reviewVector.getPurposeVector(),
-                new BoundingBox(coordinate.getY(), coordinate.getX()),
+                new BoundingBox(coordinate.getLatitude(), coordinate.getLongitude()),
                 5);
     }
 

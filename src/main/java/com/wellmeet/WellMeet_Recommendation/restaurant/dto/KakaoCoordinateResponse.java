@@ -6,13 +6,13 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class KakaoCoordinateResponse {
-    private double x; // 경도 (longitude)
-    private double y; // 위도 (latitude)
+    private double longitude;
+    private double latitude;
     private String placeName;
 
-    public KakaoCoordinateResponse(double x, double y, String placeName) {
-        this.x = x;
-        this.y = y;
+    public KakaoCoordinateResponse(double longitude, double latitude, String placeName) {
+        this.longitude = longitude;
+        this.latitude = latitude;
         this.placeName = placeName;
     }
 }

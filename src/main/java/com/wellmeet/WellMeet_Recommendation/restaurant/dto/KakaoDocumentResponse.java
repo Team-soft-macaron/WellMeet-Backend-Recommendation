@@ -8,6 +8,7 @@ import lombok.Getter;
 @Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class KakaoDocumentResponse {
+    @JsonProperty("address_name")
     private String addressName;
     @JsonProperty("category_group_code")
     private String categoryGroupCode;
@@ -25,6 +26,8 @@ public class KakaoDocumentResponse {
     private String placeUrl;
     @JsonProperty("road_address_name")
     private String roadAddressName;
-    private String x;
-    private String y;
+    @JsonProperty("x")
+    private String longitude;
+    @JsonProperty("y")
+    private String latitude;
 }
