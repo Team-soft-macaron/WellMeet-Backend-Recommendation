@@ -25,19 +25,19 @@ public class CrawlingReview {
     private String hash;
 
     @Type(VectorType.class)
-    @Column(name = "vibe_vector", columnDefinition = "vector(768)")
+    @Column(name = "vibe_vector", columnDefinition = "vector(1536)")
     private float[] vibeVector;
 
     @Type(VectorType.class)
-    @Column(name = "food_vector", columnDefinition = "vector(768)")
+    @Column(name = "food_vector", columnDefinition = "vector(1536)")
     private float[] foodVector;
 
     @Type(VectorType.class)
-    @Column(name = "companion_vector", columnDefinition = "vector(768)")
+    @Column(name = "companion_vector", columnDefinition = "vector(1536)")
     private float[] companionVector;
 
     @Type(VectorType.class)
-    @Column(name = "purpose_vector", columnDefinition = "vector(768)")
+    @Column(name = "purpose_vector", columnDefinition = "vector(1536)")
     private float[] purposeVector;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id")

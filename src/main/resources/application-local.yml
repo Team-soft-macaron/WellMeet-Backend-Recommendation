@@ -29,7 +29,7 @@ spring:
       embedding:
         options:
           model: text-embedding-3-small
-          dimensions: 768
+          dimensions: 1536
 
 services:
   restaurant:

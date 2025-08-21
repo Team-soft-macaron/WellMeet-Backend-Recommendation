@@ -14,10 +14,10 @@ CREATE TABLE IF NOT EXISTS restaurant_vector (
     place_id VARCHAR(255) UNIQUE,
     latitude DOUBLE PRECISION NOT NULL,
     longitude DOUBLE PRECISION NOT NULL,
-    vibe_vector vector(768) DEFAULT zero_vector(768),
-    food_vector vector(768) DEFAULT zero_vector(768),
-    companion_vector vector(768) DEFAULT zero_vector(768),
-    purpose_vector vector(768) DEFAULT zero_vector(768),
+    vibe_vector vector(1536) DEFAULT zero_vector(1536),
+    food_vector vector(1536) DEFAULT zero_vector(1536),
+    companion_vector vector(1536) DEFAULT zero_vector(1536),
+    purpose_vector vector(1536) DEFAULT zero_vector(1536),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     modified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
@@ -28,8 +28,8 @@ CREATE TABLE IF NOT EXISTS crawling_review (
     content TEXT,
     hash VARCHAR(255) UNIQUE,
     restaurant_id BIGINT REFERENCES restaurant_vector(id),
-    vibe_vector vector(768) DEFAULT zero_vector(768),
-    food_vector vector(768) DEFAULT zero_vector(768),
-    companion_vector vector(768) DEFAULT zero_vector(768),
-    purpose_vector vector(768) DEFAULT zero_vector(768)
+    vibe_vector vector(1536) DEFAULT zero_vector(1536),
+    food_vector vector(1536) DEFAULT zero_vector(1536),
+    companion_vector vector(1536) DEFAULT zero_vector(1536),
+    purpose_vector vector(1536) DEFAULT zero_vector(1536)
 );
