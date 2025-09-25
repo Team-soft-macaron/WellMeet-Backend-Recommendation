@@ -14,6 +14,9 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(WellMeetException.class)
     public ResponseEntity<ErrorResponse> handleWellMeetException(WellMeetException exception) {
+        log.error("Unexpected error occurred - Message: {}",
+                exception.getMessage(),
+                exception);
         return toResponse(exception.getStatus(), exception.getMessage());
     }
 

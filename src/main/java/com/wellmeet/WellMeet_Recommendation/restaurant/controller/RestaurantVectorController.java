@@ -18,7 +18,7 @@ public class RestaurantVectorController {
 
     private final RestaurantVectorService restaurantVectorService;
 
-    @PostMapping("/api/restaurant")
+    @PostMapping("/api/restaurants")
     @ResponseStatus(HttpStatus.CREATED)
     public RestaurantResponse createRestaurant(@RequestBody RestaurantCreateRequest request) {
         return restaurantVectorService.saveRestaurant(request);

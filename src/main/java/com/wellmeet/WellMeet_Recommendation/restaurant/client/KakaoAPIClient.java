@@ -2,11 +2,12 @@ package com.wellmeet.WellMeet_Recommendation.restaurant.client;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
-
 import com.wellmeet.WellMeet_Recommendation.restaurant.dto.KakaoCoordinateResponse;
 import com.wellmeet.WellMeet_Recommendation.restaurant.dto.KakaoDocumentResponse;
 import com.wellmeet.WellMeet_Recommendation.restaurant.dto.KakaoKeywordSearchResponse;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cache.annotation.Cacheable;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Component
@@ -19,6 +20,7 @@ public class KakaoAPIClient {
         this.kakaoRestClient = kakaoRestClient;
     }
 
+    @Cacheable(value = "location")
     public KakaoCoordinateResponse getFirstPlaceCoordinate(String query) {
         KakaoKeywordSearchResponse response = kakaoRestClient.get()
                 .uri(uriBuilder -> uriBuilder

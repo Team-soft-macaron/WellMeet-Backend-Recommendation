@@ -1,6 +1,7 @@
 package com.wellmeet.WellMeet_Recommendation.restaurant.client;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
@@ -18,9 +19,10 @@ public class RestaurantClient {
         this.restaurantUrl = restaurantUrl;
     }
 
-    public RestaurantDetailResponse getRestaurantById(String id) {
+    @Cacheable(value = "restaurant")
+    public RestaurantDetailResponse getRestaurantById(String restaurantId) {
         return restClient.get()
-                .uri(restaurantUrl + "/api/restaurant/{id}?memberId=1", id)
+                .uri(restaurantUrl + "/user/restaurant/{id}?memberId=1", restaurantId)
                 .retrieve()
                 .onStatus(status -> status.value() == 404,
                         (request, response) -> {

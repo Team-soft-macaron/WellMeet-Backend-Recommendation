@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 services:
   recommendation-db:
     image: pgvector/pgvector:pg16
@@ -13,7 +13,7 @@ services:
       - db-data:/var/lib/postgresql/data
       - ./init-db:/docker-entrypoint-initdb.d
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -31,7 +31,7 @@ services:
     environment:
       OPENAI_API_KEY: ${OPENAI_API_KEY}
     ports:
-      - "8081:8080"
+      - "8082:8080"
     restart: on-failure
 
 volumes:

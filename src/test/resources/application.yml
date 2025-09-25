@@ -34,6 +34,8 @@ spring:
         options:
           model: text-embedding-3-small
           dimensions: 768
+  cache:
+    cache-names=restaurant,location
 
 cors:
   origin: http://localhost:5173

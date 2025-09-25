@@ -8,6 +8,7 @@ import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.converter.BeanOutputConverter;
 import org.springframework.ai.openai.OpenAiChatModel;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import java.util.List;
 import com.wellmeet.WellMeet_Recommendation.common.dto.ExtractedInfoResponse;

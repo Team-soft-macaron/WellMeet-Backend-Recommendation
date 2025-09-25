@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -64,6 +65,7 @@ public class RestaurantVectorService {
                 reviewVector.getCompanionVector(),
                 reviewVector.getPurposeVector(),
                 5);
+
         return topRestaurants.stream().map(restaurantId -> restaurantClient
                 .getRestaurantById(restaurantId))
                 .collect(Collectors.toList());
@@ -84,7 +86,10 @@ public class RestaurantVectorService {
                         reviewVector.getPurposeVector(),
                         boundingBox,
                         5);
-
+        topRestaurants = new ArrayList<>();
+        topRestaurants.add("1");
+        topRestaurants.add("2");
+        topRestaurants.add("3");
         return topRestaurants.stream().map(restaurantId -> restaurantClient
                 .getRestaurantById(restaurantId))
                 .collect(Collectors.toList());
