@@ -24,15 +24,19 @@ spring:
         options:
           model: gpt-4o-mini
           temperature: 0.3
-      
+
       # Embedding 모델 설정
       embedding:
         options:
           model: text-embedding-3-small
           dimensions: 768
+  data:
+    redis:
+      host: host.docker.internal
+      port: 6379
 
 services:
   restaurant:
     url: http://host.docker.internal:8080
 kakao:
-  rest-api-key: ${KAKAO_REST_API_KEY}  
+  rest-api-key: ${KAKAO_REST_API_KEY}
